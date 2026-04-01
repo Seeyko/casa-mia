@@ -1935,10 +1935,12 @@ html, body {
   overflow-x: hidden !important;
   max-width: 100vw !important;
 }
-.container, .section, .hero, .trust-bar, .menu-section, 
-.menu-category, .menu-grid, .footer, .cta-section,
+.container, .hero, .trust-bar, .footer, .cta-section,
 .cart-drawer, .cart-drawer__body, .cart-step {
   overflow-x: hidden;
+  max-width: 100%;
+}
+.section, .menu-section, .menu-category, .menu-grid {
   max-width: 100%;
 }
 * {
@@ -1949,7 +1951,7 @@ img, video, iframe {
   height: auto;
 }
 .menu-item__header {
-  overflow: hidden;
+  overflow: visible;
   word-break: break-word;
 }
 
