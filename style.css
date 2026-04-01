@@ -1935,13 +1935,18 @@ html, body {
   overflow-x: hidden !important;
   max-width: 100vw !important;
 }
-.container, .hero, .trust-bar, .footer, .cta-section,
+.hero, .trust-bar, .footer, .cta-section,
 .cart-drawer, .cart-drawer__body, .cart-step {
   overflow-x: hidden;
   max-width: 100%;
 }
-.section, .menu-section, .menu-category, .menu-grid {
+.container, .section, .menu-section, .menu-category, .menu-grid {
   max-width: 100%;
+}
+/* Allow shadows to render, then clip at page level only */
+.card-grid, .menu-grid {
+  padding: 8px;
+  margin: -8px;
 }
 * {
   box-sizing: border-box;
