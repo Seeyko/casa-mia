@@ -1084,11 +1084,11 @@ p {
   }
 
   .gallery-grid__item img {
-    height: 250px;
+    height: 100%;
   }
 
   .gallery-grid__item--large img {
-    height: 350px;
+    height: 100%;
   }
 }
 
