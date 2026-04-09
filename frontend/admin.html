@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — CasaMia</title>
+  <link rel="icon" type="image/png" href="images/logo-casamia.jpg">
+  <style>
+    :root {
+      --bg: #0F0D0B; --bg2: #1A1714; --bg3: #211E1A; --text: #F5F0E8;
+      --text2: #B8AFA3; --gold: #D4A853; --gold-h: #E8C97A; --border: #2E2A25;
+      --red: #E53935; --green: #4CAF50; --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); }
+    a { color: var(--gold); text-decoration: none; }
+
+    /* Layout */
+    .app { max-width: 1000px; margin: 0 auto; padding: 20px; }
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .header h1 { font-size: 1.3rem; color: var(--gold); }
+    .logout { padding: 6px 16px; border: 1px solid var(--border); border-radius: 99px; color: var(--text2); cursor: pointer; font-size: .85rem; background: none; }
+    .logout:hover { border-color: var(--red); color: var(--red); }
+
+    /* Login */
+    .login { max-width: 360px; margin: 100px auto; text-align: center; }
+    .login h2 { margin-bottom: 24px; color: var(--gold); }
+    .login input { width: 100%; padding: 12px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: .95rem; margin-bottom: 12px; }
+    .login button { width: 100%; padding: 12px; background: var(--gold); color: var(--bg); border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; font-size: .95rem; }
+    .login button:hover { background: var(--gold-h); }
+    .error { color: var(--red); font-size: .85rem; margin-top: 8px; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg2); border-radius: 99px; padding: 4px; }
+    .tab { padding: 10px 24px; border-radius: 99px; cursor: pointer; font-size: .9rem; color: var(--text2); font-weight: 500; border: none; background: none; }
+    .tab:hover { color: var(--text); }
+    .tab.active { background: var(--gold); color: var(--bg); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* Cards */
+    .card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; }
+    .card-title { font-weight: 600; }
+    .card-meta { color: var(--text2); font-size: .8rem; }
+    .card-actions { display: flex; gap: 8px; }
+    .card-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 12px; }
+
+    /* Buttons */
+    .btn { padding: 8px 16px; border-radius: var(--radius); font-size: .85rem; cursor: pointer; border: none; font-weight: 500; }
+    .btn-primary { background: var(--gold); color: var(--bg); }
+    .btn-primary:hover { background: var(--gold-h); }
+    .btn-danger { background: none; color: var(--red); border: 1px solid var(--red); }
+    .btn-danger:hover { background: var(--red); color: white; }
+    .btn-sm { padding: 4px 12px; font-size: .8rem; }
+    .btn-add { margin-bottom: 16px; }
+
+    /* Forms */
+    .form-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; }
+    .form-overlay.active { display: flex; align-items: center; justify-content: center; }
+    .form-modal { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+    .form-modal h3 { margin-bottom: 16px; color: var(--gold); }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: .85rem; color: var(--text2); margin-bottom: 4px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); font-size: .9rem; font-family: inherit;
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+    .form-cancel { padding: 8px 16px; background: none; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text2); cursor: pointer; }
+
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: .7rem; font-weight: 600; }
+    .badge-green { background: rgba(76,175,80,.15); color: var(--green); }
+    .badge-gray { background: rgba(255,255,255,.08); color: var(--text2); }
+    .badge-section { background: rgba(212,168,83,.15); color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="login">
+  <h2>CasaMia Admin</h2>
+  <input type="password" id="apiKeyInput" placeholder="Cle API">
+  <button onclick="login()">Connexion</button>
+  <p class="error" id="loginError"></p>
+</div>
+
+<!-- Admin App -->
+<div id="adminApp" class="app" style="display:none;">
+  <div class="header">
+    <h1>CasaMia Admin</h1>
+    <button class="logout" onclick="logout()">Deconnexion</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('news')">Actualites</button>
+    <button class="tab" onclick="switchTab('menu')">Carte &amp; Menus</button>
+    <button class="tab" onclick="switchTab('categories')">Categories</button>
+  </div>
+
+  <!-- News Panel -->
+  <div id="panel-news" class="panel active">
+    <button class="btn btn-primary btn-add" onclick="openNewsForm()">+ Ajouter une actualite</button>
+    <div id="newsList"></div>
+  </div>
+
+  <!-- Menu Panel -->
+  <div id="panel-menu" class="panel">
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <select id="menuCategoryFilter" onchange="loadItems()" style="padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.9rem;">
+        <option value="">Toutes les categories</option>
+      </select>
+      <button class="btn btn-primary" onclick="openItemForm()">+ Ajouter un item</button>
+    </div>
+    <div id="itemsList"></div>
+  </div>
+
+  <!-- Categories Panel -->
+  <div id="panel-categories" class="panel">
+    <button class="btn btn-primary btn-add" onclick="openCategoryForm()">+ Ajouter une categorie</button>
+    <div id="categoriesList"></div>
+  </div>
+</div>
+
+<!-- Form Overlay -->
+<div class="form-overlay" id="formOverlay">
+  <div class="form-modal" id="formModal"></div>
+</div>
+
+<script>
+const API = (window.APP_CONFIG?.API_URL || '') + '/api';
+const ADMIN_PATH = window.APP_CONFIG?.ADMIN_SECRET_PATH || '_admin';
+let API_KEY = '';
+
+// ===== AUTH =====
+function login() {
+  API_KEY = document.getElementById('apiKeyInput').value;
+  fetch(API + '/' + ADMIN_PATH + '/news', { headers: { 'Authorization': 'Bearer ' + API_KEY } })
+    .then(function(r) {
+      if (!r.ok) throw new Error('Invalid');
+      sessionStorage.setItem('casamia_key', API_KEY);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminApp').style.display = '';
+      loadAll();
+    })
+    .catch(function() {
+      document.getElementById('loginError').textContent = 'Cle invalide';
+    });
+}
+function logout() {
+  sessionStorage.removeItem('casamia_key');
+  API_KEY = '';
+  document.getElementById('loginScreen').style.display = '';
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('apiKeyInput').value = '';
+}
+
+// Auto-login
+(function() {
+  var k = sessionStorage.getItem('casamia_key');
+  if (k) { document.getElementById('apiKeyInput').value = k; login(); }
+})();
+
+function adminFetch(path, opts) {
+  opts = opts || {};
+  opts.headers = opts.headers || {};
+  opts.headers['Authorization'] = 'Bearer ' + API_KEY;
+  return fetch(API + '/' + ADMIN_PATH + path, opts);
+}
+
+// ===== TABS =====
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  event.target.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+function loadAll() { loadNews(); loadCategories(); loadCategoryFilter(); loadItems(); }
+
+// ===== NEWS =====
+function loadNews() {
+  adminFetch('/news').then(function(r) { return r.json(); }).then(function(news) {
+    var el = document.getElementById('newsList');
+    if (!news.length) { el.innerHTML = '<p style="color:var(--text2);">Aucune actualite.</p>'; return; }
+    el.innerHTML = news.map(function(n) {
+      var img = n.image_path ? '<img class="card-img" src="' + API + '/images/' + n.image_path + '">' : '';
+      var badge = n.published ? '<span class="badge badge-green">Publie</span>' : '<span class="badge badge-gray">Brouillon</span>';
+      return '<div class="card"><div class="card-header"><div style="display:flex;align-items:center;">' + img +
+        '<div><span class="card-title">' + esc(n.title) + '</span> ' + badge +
+        '<div class="card-meta">' + new Date(n.created_at).toLocaleDateString('fr-FR') + '</div></div></div>' +
+        '<div class="card-actions"><button class="btn btn-sm btn-primary" onclick="editNews(' + n.id + ')">Modifier</button>' +
+        '<button class="btn btn-sm btn-danger" onclick="deleteNews(' + n.id + ')">Supprimer</button></div></div></div>';
+    }).join('');
+  });
+}
+
+function openNewsForm(data) {
+  var d = data || {};
+  var isEdit = !!d.id;
+  document.getElementById('formModal').innerHTML =
+    '<h3>' + (isEdit ? 'Modifier' : 'Nouvelle') + ' actualite</h3>' +
+    '<div class="form-group"><label>Titre</label><input id="f_title" value="' + esc(d.title || '') + '"></div>' +
+    '<div class="form-group"><label>Contenu</label><textarea id="f_content">' + esc(d.content || '') + '</textarea></div>' +
+    '<div class="form-group"><label>Image</label><input type="file" id="f_image" accept="image/*"></div>' +
+    '<div class="form-group"><label><input type="checkbox" id="f_published"' + (d.published ? ' checked' : '') + '> Publie</label></div>' +
+    '<div class="form-actions"><button class="form-cancel" onclick="closeForm()">Annuler</button>' +
+    '<button class="btn btn-primary" onclick="saveNews(' + (d.id || 'null') + ')">Enregistrer</button></div>';
+  document.getElementById('formOverlay').classList.add('active');
+}
+
+function editNews(id) {
+  adminFetch('/news').then(function(r) { return r.json(); }).then(function(news) {
+    var n = news.find(function(x) { return x.id === id; });
+    if (n) openNewsForm(n);
+  });
+}
+
+function saveNews(id) {
+  var fd = new FormData();
+  fd.append('title', document.getElementById('f_title').value);
+  fd.append('content', document.getElementById('f_content').value);
+  fd.append('published', document.getElementById('f_published').checked ? 'true' : 'false');
+  var file = document.getElementById('f_image').files[0];
+  if (file) fd.append('image', file);
+
+  var method = id ? 'PUT' : 'POST';
+  var path = id ? '/news/' + id : '/news';
+  adminFetch(path, { method: method, body: fd }).then(function() { closeForm(); loadNews(); });
+}
+
+function deleteNews(id) {
+  if (!confirm('Supprimer cette actualite ?')) return;
+  adminFetch('/news/' + id, { method: 'DELETE' }).then(function() { loadNews(); });
+}
+
+// ===== CATEGORIES =====
+function loadCategories() {
+  adminFetch('/menu/categories').then(function(r) { return r.json(); }).then(function(cats) {
+    var el = document.getElementById('categoriesList');
+    el.innerHTML = cats.map(function(c) {
+      return '<div class="card"><div class="card-header"><div><span class="card-title">' + esc(c.name) + '</span> ' +
+        '<span class="badge badge-section">' + c.section + '</span> ' +
+        '<span class="card-meta">Ordre: ' + c.sort_order + '</span></div>' +
+        '<div class="card-actions"><button class="btn btn-sm btn-primary" onclick="editCategory(' + c.id + ')">Modifier</button>' +
+        '<button class="btn btn-sm btn-danger" onclick="deleteCategory(' + c.id + ')">Supprimer</button></div></div></div>';
+    }).join('');
+  });
+}
+
+function loadCategoryFilter() {
+  adminFetch('/menu/categories').then(function(r) { return r.json(); }).then(function(cats) {
+    var el = document.getElementById('menuCategoryFilter');
+    el.innerHTML = '<option value="">Toutes les categories</option>' +
+      cats.map(function(c) { return '<option value="' + c.id + '">' + esc(c.name) + ' (' + c.section + ')</option>'; }).join('');
+  });
+}
+
+function openCategoryForm(data) {
+  var d = data || {};
+  var isEdit = !!d.id;
+  document.getElementById('formModal').innerHTML =
+    '<h3>' + (isEdit ? 'Modifier' : 'Nouvelle') + ' categorie</h3>' +
+    '<div class="form-group"><label>Nom</label><input id="f_catname" value="' + esc(d.name || '') + '"></div>' +
+    '<div class="form-group"><label>Section</label><select id="f_catsection"><option value="carte"' + (d.section === 'carte' ? ' selected' : '') + '>Carte</option><option value="traiteur"' + (d.section === 'traiteur' ? ' selected' : '') + '>Traiteur</option></select></div>' +
+    '<div class="form-group"><label>Ordre</label><input type="number" id="f_catorder" value="' + (d.sort_order || 0) + '"></div>' +
+    '<div class="form-actions"><button class="form-cancel" onclick="closeForm()">Annuler</button>' +
+    '<button class="btn btn-primary" onclick="saveCategory(' + (d.id || 'null') + ')">Enregistrer</button></div>';
+  document.getElementById('formOverlay').classList.add('active');
+}
+
+function editCategory(id) {
+  adminFetch('/menu/categories').then(function(r) { return r.json(); }).then(function(cats) {
+    var c = cats.find(function(x) { return x.id === id; });
+    if (c) openCategoryForm(c);
+  });
+}
+
+function saveCategory(id) {
+  var body = { name: document.getElementById('f_catname').value, section: document.getElementById('f_catsection').value, sort_order: parseInt(document.getElementById('f_catorder').value) || 0 };
+  var method = id ? 'PUT' : 'POST';
+  var path = id ? '/menu/categories/' + id : '/menu/categories';
+  adminFetch(path, { method: method, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY }, body: JSON.stringify(body) })
+    .then(function() { closeForm(); loadCategories(); loadCategoryFilter(); });
+}
+
+function deleteCategory(id) {
+  if (!confirm('Supprimer cette categorie et tous ses items ?')) return;
+  adminFetch('/menu/categories/' + id, { method: 'DELETE' }).then(function() { loadCategories(); loadCategoryFilter(); loadItems(); });
+}
+
+// ===== MENU ITEMS =====
+function loadItems() {
+  var catId = document.getElementById('menuCategoryFilter').value;
+  var path = '/menu/items' + (catId ? '?category_id=' + catId : '');
+  adminFetch(path).then(function(r) { return r.json(); }).then(function(items) {
+    var el = document.getElementById('itemsList');
+    if (!items.length) { el.innerHTML = '<p style="color:var(--text2);">Aucun item.</p>'; return; }
+    el.innerHTML = items.map(function(item) {
+      var img = item.image_path ? '<img class="card-img" src="' + API + '/images/' + item.image_path + '">' : '';
+      var badges = '';
+      if (item.badge) badges += '<span class="badge badge-green">' + esc(item.badge) + '</span> ';
+      if (!item.available) badges += '<span class="badge badge-gray">Indisponible</span> ';
+      return '<div class="card"><div class="card-header"><div style="display:flex;align-items:center;">' + img +
+        '<div><span class="card-title">' + esc(item.name) + '</span> ' + badges +
+        (item.price ? '<span class="card-meta" style="color:var(--gold);font-weight:600;"> ' + esc(item.price) + '</span>' : '') +
+        '<div class="card-meta">' + esc(item.description || '') + '</div></div></div>' +
+        '<div class="card-actions"><button class="btn btn-sm btn-primary" onclick="editItem(' + item.id + ')">Modifier</button>' +
+        '<button class="btn btn-sm btn-danger" onclick="deleteItem(' + item.id + ')">Supprimer</button></div></div></div>';
+    }).join('');
+  });
+}
+
+function openItemForm(data) {
+  var d = data || {};
+  var isEdit = !!d.id;
+  // Need categories for select
+  adminFetch('/menu/categories').then(function(r) { return r.json(); }).then(function(cats) {
+    var catOpts = cats.map(function(c) {
+      return '<option value="' + c.id + '"' + (d.category_id == c.id ? ' selected' : '') + '>' + esc(c.name) + ' (' + c.section + ')</option>';
+    }).join('');
+    document.getElementById('formModal').innerHTML =
+      '<h3>' + (isEdit ? 'Modifier' : 'Nouvel') + ' item</h3>' +
+      '<div class="form-group"><label>Categorie</label><select id="f_itemcat">' + catOpts + '</select></div>' +
+      '<div class="form-group"><label>Nom</label><input id="f_itemname" value="' + esc(d.name || '') + '"></div>' +
+      '<div class="form-group"><label>Description</label><textarea id="f_itemdesc">' + esc(d.description || '') + '</textarea></div>' +
+      '<div class="form-group"><label>Prix</label><input id="f_itemprice" value="' + esc(d.price || '') + '" placeholder="12,00€"></div>' +
+      '<div class="form-group"><label>Badge</label><input id="f_itembadge" value="' + esc(d.badge || '') + '" placeholder="NEW, ★, etc."></div>' +
+      '<div class="form-group"><label>Note</label><input id="f_itemnote" value="' + esc(d.note || '') + '"></div>' +
+      '<div class="form-group"><label>Ordre</label><input type="number" id="f_itemorder" value="' + (d.sort_order || 0) + '"></div>' +
+      '<div class="form-group"><label>Image</label><input type="file" id="f_itemimage" accept="image/*"></div>' +
+      '<div class="form-group"><label><input type="checkbox" id="f_itemavail"' + (d.available !== false ? ' checked' : '') + '> Disponible</label></div>' +
+      '<div class="form-actions"><button class="form-cancel" onclick="closeForm()">Annuler</button>' +
+      '<button class="btn btn-primary" onclick="saveItem(' + (d.id || 'null') + ')">Enregistrer</button></div>';
+    document.getElementById('formOverlay').classList.add('active');
+  });
+}
+
+function editItem(id) {
+  adminFetch('/menu/items').then(function(r) { return r.json(); }).then(function(items) {
+    var item = items.find(function(x) { return x.id === id; });
+    if (item) openItemForm(item);
+  });
+}
+
+function saveItem(id) {
+  var fd = new FormData();
+  fd.append('category_id', document.getElementById('f_itemcat').value);
+  fd.append('name', document.getElementById('f_itemname').value);
+  fd.append('description', document.getElementById('f_itemdesc').value);
+  fd.append('price', document.getElementById('f_itemprice').value);
+  fd.append('badge', document.getElementById('f_itembadge').value);
+  fd.append('note', document.getElementById('f_itemnote').value);
+  fd.append('sort_order', document.getElementById('f_itemorder').value);
+  fd.append('available', document.getElementById('f_itemavail').checked ? 'true' : 'false');
+  var file = document.getElementById('f_itemimage').files[0];
+  if (file) fd.append('image', file);
+
+  var method = id ? 'PUT' : 'POST';
+  var path = id ? '/menu/items/' + id : '/menu/items';
+  adminFetch(path, { method: method, body: fd }).then(function() { closeForm(); loadItems(); });
+}
+
+function deleteItem(id) {
+  if (!confirm('Supprimer cet item ?')) return;
+  adminFetch('/menu/items/' + id, { method: 'DELETE' }).then(function() { loadItems(); });
+}
+
+// ===== HELPERS =====
+function closeForm() { document.getElementById('formOverlay').classList.remove('active'); }
+document.getElementById('formOverlay').addEventListener('click', function(e) { if (e.target === this) closeForm(); });
+
+function esc(s) {
+  if (!s) return '';
+  var d = document.createElement('div');
+  d.appendChild(document.createTextNode(s));
+  return d.innerHTML;
+}
+
+// Enter key on login
+document.getElementById('apiKeyInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') login(); });
+</script>
+</body>
+</html>

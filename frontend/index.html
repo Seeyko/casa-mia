@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CasaMia — Pizzeria Artisanale Sicilienne | Entraigues &amp; Althen</title>
+  <meta name="description" content="Pizzeria artisanale sicilienne a Entraigues-sur-la-Sorgue et Althen-des-Paluds. Produits importes de Sicile par un vrai chef sicilien. Note 4.9/5.">
+  <meta property="og:title" content="CasaMia — Pizzeria Artisanale Sicilienne">
+  <meta property="og:description" content="Pizzas artisanales, traiteur italien, epicerie fine. Deux adresses dans le Vaucluse.">
+  <meta property="og:image" content="images/pizza-gourmet-roquette.jpg">
+  <meta property="og:type" content="restaurant">
+  <meta property="og:locale" content="fr_FR">
+  <link rel="icon" type="image/png" href="images/logo-casamia.jpg">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "CasaMia Pizzeria",
+    "image": "images/pizza-gourmet-roquette.jpg",
+    "description": "Pizzeria artisanale sicilienne a Entraigues-sur-la-Sorgue et Althen-des-Paluds. Produits importes de Sicile.",
+    "servesCuisine": ["Italian", "Pizza", "Sicilian"],
+    "priceRange": "$$",
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "addressLocality": "Entraigues-sur-la-Sorgue",
+        "postalCode": "84320",
+        "streetAddress": "51 Rue Laurent Bertrand",
+        "addressCountry": "FR"
+      },
+      {
+        "@type": "PostalAddress",
+        "addressLocality": "Althen-des-Paluds",
+        "postalCode": "84210",
+        "streetAddress": "254 Avenue Ernest Perrin",
+        "addressCountry": "FR"
+      }
+    ],
+    "telephone": "+33645794930",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "298",
+      "bestRating": "5"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="/" class="header__logo"><img src="images/logo-casamia.jpg" alt="CasaMia" style="height:44px;width:auto;"></a>
+      <nav class="nav" id="nav" aria-label="Navigation principale">
+        <a href="/" class="nav__link nav__link--active">Accueil</a>
+        <a href="/menu" class="nav__link">La Carte</a>
+        <a href="/#nos-adresses" class="nav__link">Contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+    </div>
+  </header>
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__bg" style="background-image: url('images/pizza-four-hero.jpg');"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <div class="hero__badge">Pizzeria &bull; Traiteur &bull; Epicerie</div>
+      <h1 class="hero__title">La Sicile au coeur du Vaucluse</h1>
+      <p class="hero__subtitle">Pizzeria artisanale &bull; Traiteur italien &bull; Epicerie fine<br>Par un vrai chef sicilien</p>
+      <div class="hero__stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9/5 — 298 avis</span></div>
+
+      <!-- Status badges (loaded dynamically) -->
+      <div class="status-badges" id="statusBadges">
+        <div class="status-badge"><span class="status-badge__label">Chargement...</span></div>
+      </div>
+
+      <div class="btn-group" style="justify-content: center;">
+        <div class="phone-popover-wrapper">
+          <button class="btn btn--gold" id="phoneBtn">Appelez-nous</button>
+          <div class="phone-popover" id="phonePopover">
+            <div class="phone-popover__item">
+              <div>
+                <span class="phone-popover__name">Entraigues-sur-la-Sorgue</span>
+                <a href="tel:0645794930" class="phone-popover__number">06 45 79 49 30</a>
+              </div>
+            </div>
+            <div class="phone-popover__item">
+              <div>
+                <span class="phone-popover__name">Althen-des-Paluds</span>
+                <a href="tel:0490361633" class="phone-popover__number">04 90 36 16 33</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="/menu" class="btn btn--outline">Decouvrir la carte</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phone bottom sheet (mobile) -->
+  <div class="phone-overlay" id="phoneOverlay"></div>
+  <div class="phone-bottomsheet" id="phoneBottomsheet">
+    <div class="phone-bottomsheet__handle"></div>
+    <div class="phone-bottomsheet__title">Appelez-nous</div>
+    <div class="phone-bottomsheet__item">
+      <div>
+        <div style="font-weight:600;">Entraigues-sur-la-Sorgue</div>
+        <div style="color:var(--text-muted);font-size:.85rem;">51 Rue Laurent Bertrand</div>
+      </div>
+      <a href="tel:0645794930">Appeler</a>
+    </div>
+    <div class="phone-bottomsheet__item">
+      <div>
+        <div style="font-weight:600;">Althen-des-Paluds</div>
+        <div style="color:var(--text-muted);font-size:.85rem;">254 Ave Ernest Perrin</div>
+      </div>
+      <a href="tel:0490361633">Appeler</a>
+    </div>
+  </div>
+
+  <!-- News Section -->
+  <section class="section" id="newsSection" style="display:none;">
+    <div class="container">
+      <div class="text-center fade-in">
+        <h2 class="section__title">Actualites</h2>
+        <hr class="decorative-line">
+      </div>
+      <div class="news-grid" id="newsGrid" style="margin-top:32px;"></div>
+    </div>
+  </section>
+
+  <!-- Why CasaMia -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="text-center fade-in">
+        <h2 class="section__title">Trois raisons de nous faire confiance</h2>
+        <hr class="decorative-line">
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:40px;">
+        <div class="location-card fade-in" style="text-align:center;">
+          <div style="color:var(--terracotta);font-family:var(--font-heading);font-size:1.5rem;font-style:italic;margin-bottom:12px;">Sicilia</div>
+          <h3 style="font-size:1.1rem;margin-bottom:8px;">Un chef sicilien authentique</h3>
+          <p style="color:var(--text-secondary);font-size:.9rem;">Notre chef est ne en Sicile, forme en Sicile, et cuisine comme en Sicile. Chaque recette est un hommage a sa terre natale.</p>
+        </div>
+        <div class="location-card fade-in" style="text-align:center;">
+          <div style="color:var(--gold);font-family:var(--font-heading);font-size:1.5rem;font-style:italic;margin-bottom:12px;">Importo</div>
+          <h3 style="font-size:1.1rem;margin-bottom:8px;">Des produits importes de Sicile</h3>
+          <p style="color:var(--text-secondary);font-size:.9rem;">Farine de ble dur, tomates San Marzano, huile d'olive extra-vierge, anchois de Sciacca... Nous importons ce qui fait la difference.</p>
+        </div>
+        <div class="location-card fade-in" style="text-align:center;">
+          <div style="color:var(--gold);font-size:1.5rem;margin-bottom:12px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <h3 style="font-size:1.1rem;margin-bottom:8px;">4.9/5 — Nos clients parlent pour nous</h3>
+          <p style="color:var(--text-secondary);font-size:.9rem;">Plus de 298 avis verifies. Nos pizzas, nos arancini, nos cannoli... Tout est fait maison, avec passion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center fade-in">
+        <h2 class="section__title">Nos creations</h2>
+        <hr class="decorative-line">
+      </div>
+      <div class="gallery-grid" style="margin-top:32px;">
+        <div class="fade-in"><img src="images/pizza-gourmet-roquette.jpg" alt="Pizza gourmet" loading="lazy"></div>
+        <div class="fade-in"><img src="images/planche-charcuterie.jpg" alt="Planche charcuterie" loading="lazy"></div>
+        <div class="fade-in"><img src="images/pizza-coppa-buffala.jpg" alt="Pizza coppa buffala" loading="lazy"></div>
+        <div class="fade-in"><img src="images/ravioles-burrata-pesto.jpg" alt="Ravioles burrata" loading="lazy"></div>
+        <div class="fade-in"><img src="images/pizza-salsiccia-oignons-pro.jpg" alt="Pizza salsiccia" loading="lazy"></div>
+        <div class="fade-in"><img src="images/camembert-four-charcuterie.jpg" alt="Camembert au four" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="text-center fade-in">
+        <div style="display:inline-flex;align-items:center;gap:12px;background:var(--bg-card);padding:16px 28px;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:24px;">
+          <div>
+            <div style="font-weight:700;font-size:1.3rem;">4,9<span style="color:var(--gold);margin-left:6px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+            <div style="font-size:.85rem;color:var(--text-muted);">298 avis Google</div>
+          </div>
+        </div>
+        <h2 class="section__title">Ce que disent nos clients</h2>
+        <hr class="decorative-line">
+      </div>
+      <div class="reviews-grid" style="margin-top:32px;">
+        <div class="review-card fade-in">
+          <div class="review-card__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="review-card__text">"Ce soir je viens de manger la meilleure pizza raclette de ma vie. Votre jambon est un pur delice !!! Et la pate d'une legerete peu commune... Un regal"</p>
+          <p class="review-card__author">— Olivier Richard</p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="review-card__text">"Excellent ! Longtemps que je n'avais pas mange une aussi bonne pizza, pate longue fermentation, garnie genereusement, de bons ingredients, le tout pour 12 euros."</p>
+          <p class="review-card__author">— Varg Veum</p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="review-card__text">"Une cuisine italienne d'exception a des prix plus qu'abordables, ce repas fut un pur moment de plaisir ! L'accueil est tres convivial et chaleureux."</p>
+          <p class="review-card__author">— Valeriane Clemente</p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="review-card__text">"Au Top qualite prix excellent y a pas mieux. Ne cherchez pas ailleurs, Avignon hors de prix et qualite tres moyenne. Ici accueil tres agreable et pizza excellente."</p>
+          <p class="review-card__author">— Stephane Berdah</p>
+        </div>
+      </div>
+      <div class="text-center" style="margin-top:32px;">
+        <a href="https://maps.app.goo.gl/MpP9kDVa18ibbMCu6" target="_blank" rel="noopener" class="btn btn--outline" style="font-size:.9rem;">Voir les 298 avis sur Google &#8594;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nos adresses -->
+  <section class="section" id="nos-adresses">
+    <div class="container">
+      <div class="text-center fade-in">
+        <h2 class="section__title">Nos adresses</h2>
+        <p class="section__subtitle">Retrouvez-nous dans nos deux pizzerias du Vaucluse</p>
+        <hr class="decorative-line">
+      </div>
+      <div class="locations-grid" id="locationsGrid" style="margin-top:32px;">
+        <div class="location-card"><p style="color:var(--text-muted);">Chargement...</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <img src="images/logo-casamia.jpg" alt="CasaMia" style="height:50px;width:auto;margin-bottom:12px;">
+          <h3 class="footer__title">CasaMia</h3>
+          <p class="footer__text">Pizzeria artisanale, traiteur italien et epicerie fine. Par un vrai chef sicilien, avec des produits importes de Sicile.</p>
+        </div>
+        <div>
+          <h3 class="footer__title">Navigation</h3>
+          <a href="/" class="footer__link">Accueil</a>
+          <a href="/menu" class="footer__link">La Carte</a>
+          <a href="/#nos-adresses" class="footer__link">Nos Adresses</a>
+        </div>
+        <div>
+          <h3 class="footer__title">Entraigues-sur-la-Sorgue</h3>
+          <p class="footer__text">51 Rue Laurent Bertrand, 84320</p>
+          <a href="tel:0645794930" class="footer__link" style="color:var(--gold);font-weight:600;">06 45 79 49 30</a>
+        </div>
+        <div>
+          <h3 class="footer__title">Althen-des-Paluds</h3>
+          <p class="footer__text">254 Avenue Ernest Perrin, 84210</p>
+          <a href="tel:0490361633" class="footer__link" style="color:var(--gold);font-weight:600;">04 90 36 16 33</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>&copy; 2026 CasaMia Pizzeria — Entraigues-sur-la-Sorgue &amp; Althen-des-Paluds. Tous droits reserves.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
