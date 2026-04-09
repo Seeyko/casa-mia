@@ -81,22 +81,43 @@
 <!-- Login Screen -->
 <div id="loginScreen" class="login">
   <h2>CasaMia Admin</h2>
-  <input type="password" id="apiKeyInput" placeholder="Cle API">
-  <button onclick="login()">Connexion</button>
-  <p class="error" id="loginError"></p>
+  <div id="loginForm">
+    <input type="text" id="usernameInput" placeholder="Nom d'utilisateur" autocomplete="username">
+    <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="current-password">
+    <button onclick="login()">Connexion</button>
+    <p class="error" id="loginError"></p>
+    <p style="margin-top:16px;"><a href="#" onclick="showResetForm();return false;" style="font-size:.85rem;color:var(--text2);">Mot de passe oublie ?</a></p>
+  </div>
+  <div id="resetForm" style="display:none;">
+    <p style="color:var(--text2);font-size:.9rem;margin-bottom:16px;">Entrez votre nom d'utilisateur pour generer un token de reinitialisation (visible dans les logs serveur).</p>
+    <input type="text" id="resetUsername" placeholder="Nom d'utilisateur">
+    <button onclick="requestReset()">Demander un reset</button>
+    <div id="resetTokenForm" style="display:none;margin-top:16px;">
+      <p style="color:var(--green);font-size:.85rem;margin-bottom:12px;">Token genere. Consultez les logs du serveur, puis collez-le ici :</p>
+      <input type="text" id="resetToken" placeholder="Token de reinitialisation">
+      <input type="password" id="resetNewPassword" placeholder="Nouveau mot de passe (min 6 car.)">
+      <button onclick="resetPassword()">Reinitialiser</button>
+    </div>
+    <p class="error" id="resetError"></p>
+    <p style="margin-top:16px;"><a href="#" onclick="showLoginForm();return false;" style="font-size:.85rem;color:var(--text2);">Retour a la connexion</a></p>
+  </div>
 </div>
 
 <!-- Admin App -->
 <div id="adminApp" class="app" style="display:none;">
   <div class="header">
     <h1>CasaMia Admin</h1>
-    <button class="logout" onclick="logout()">Deconnexion</button>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span id="userDisplay" style="color:var(--text2);font-size:.85rem;"></span>
+      <button class="logout" onclick="logout()">Deconnexion</button>
+    </div>
   </div>
 
   <div class="tabs">
     <button class="tab active" onclick="switchTab('news')">Actualites</button>
     <button class="tab" onclick="switchTab('menu')">Carte &amp; Menus</button>
     <button class="tab" onclick="switchTab('categories')">Categories</button>
+    <button class="tab" onclick="switchTab('settings')">Parametres</button>
   </div>
 
   <!-- News Panel -->
@@ -123,6 +144,19 @@
   </div>
 </div>
 
+  <!-- Settings Panel -->
+  <div id="panel-settings" class="panel">
+    <div class="card" style="max-width:400px;">
+      <h3 style="margin-bottom:16px;color:var(--gold);">Changer le mot de passe</h3>
+      <div class="form-group"><label>Mot de passe actuel</label><input type="password" id="settings_currentpw"></div>
+      <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="settings_newpw" placeholder="Min 6 caracteres"></div>
+      <button class="btn btn-primary" onclick="changePassword()" style="margin-top:8px;">Enregistrer</button>
+      <p class="error" id="settingsError" style="margin-top:8px;"></p>
+      <p id="settingsSuccess" style="color:var(--green);font-size:.85rem;margin-top:8px;display:none;">Mot de passe modifie avec succes.</p>
+    </div>
+  </div>
+</div>
+
 <!-- Form Overlay -->
 <div class="form-overlay" id="formOverlay">
   <div class="form-modal" id="formModal"></div>
@@ -131,41 +165,126 @@
 <script>
 const API = (window.APP_CONFIG?.API_URL || '') + '/api';
 const ADMIN_PATH = window.APP_CONFIG?.ADMIN_SECRET_PATH || '_admin';
-let API_KEY = '';
+let TOKEN = '';
+let USERNAME = '';
 
 // ===== AUTH =====
+function showResetForm() { document.getElementById('loginForm').style.display='none'; document.getElementById('resetForm').style.display=''; }
+function showLoginForm() { document.getElementById('resetForm').style.display='none'; document.getElementById('loginForm').style.display=''; }
+
 function login() {
-  API_KEY = document.getElementById('apiKeyInput').value;
-  fetch(API + '/' + ADMIN_PATH + '/news', { headers: { 'Authorization': 'Bearer ' + API_KEY } })
-    .then(function(r) {
-      if (!r.ok) throw new Error('Invalid');
-      sessionStorage.setItem('casamia_key', API_KEY);
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminApp').style.display = '';
-      loadAll();
+  var username = document.getElementById('usernameInput').value;
+  var password = document.getElementById('passwordInput').value;
+  fetch(API + '/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: username, password: password })
+  })
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+    .then(function(res) {
+      if (!res.ok) throw new Error(res.data.error || 'Erreur');
+      TOKEN = res.data.token;
+      USERNAME = res.data.username;
+      sessionStorage.setItem('casamia_token', TOKEN);
+      sessionStorage.setItem('casamia_user', USERNAME);
+      showApp();
     })
-    .catch(function() {
-      document.getElementById('loginError').textContent = 'Cle invalide';
+    .catch(function(e) {
+      document.getElementById('loginError').textContent = 'Identifiants incorrects';
     });
 }
-function logout() {
-  sessionStorage.removeItem('casamia_key');
-  API_KEY = '';
-  document.getElementById('loginScreen').style.display = '';
-  document.getElementById('adminApp').style.display = 'none';
-  document.getElementById('apiKeyInput').value = '';
+
+function requestReset() {
+  var username = document.getElementById('resetUsername').value;
+  fetch(API + '/auth/reset-request', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: username })
+  }).then(function() {
+    document.getElementById('resetTokenForm').style.display = '';
+  });
 }
 
-// Auto-login
+function resetPassword() {
+  var token = document.getElementById('resetToken').value;
+  var newPassword = document.getElementById('resetNewPassword').value;
+  fetch(API + '/auth/reset-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: token, new_password: newPassword })
+  })
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+    .then(function(res) {
+      if (!res.ok) throw new Error(res.data.error || 'Erreur');
+      document.getElementById('resetError').textContent = '';
+      document.getElementById('resetError').style.color = 'var(--green)';
+      document.getElementById('resetError').textContent = 'Mot de passe reinitialise ! Retournez a la connexion.';
+    })
+    .catch(function(e) {
+      document.getElementById('resetError').style.color = 'var(--red)';
+      document.getElementById('resetError').textContent = e.message;
+    });
+}
+
+function changePassword() {
+  var current = document.getElementById('settings_currentpw').value;
+  var newpw = document.getElementById('settings_newpw').value;
+  document.getElementById('settingsError').textContent = '';
+  document.getElementById('settingsSuccess').style.display = 'none';
+  adminFetch('/auth/change-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN },
+    body: JSON.stringify({ current_password: current, new_password: newpw })
+  })
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+    .then(function(res) {
+      if (!res.ok) throw new Error(res.data.error || 'Erreur');
+      document.getElementById('settingsSuccess').style.display = '';
+      document.getElementById('settings_currentpw').value = '';
+      document.getElementById('settings_newpw').value = '';
+    })
+    .catch(function(e) {
+      document.getElementById('settingsError').textContent = e.message;
+    });
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminApp').style.display = '';
+  document.getElementById('userDisplay').textContent = USERNAME;
+  loadAll();
+}
+
+function logout() {
+  sessionStorage.removeItem('casamia_token');
+  sessionStorage.removeItem('casamia_user');
+  TOKEN = '';
+  USERNAME = '';
+  document.getElementById('loginScreen').style.display = '';
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('usernameInput').value = '';
+  document.getElementById('passwordInput').value = '';
+  showLoginForm();
+}
+
+// Auto-login from session
 (function() {
-  var k = sessionStorage.getItem('casamia_key');
-  if (k) { document.getElementById('apiKeyInput').value = k; login(); }
+  var t = sessionStorage.getItem('casamia_token');
+  var u = sessionStorage.getItem('casamia_user');
+  if (t && u) {
+    TOKEN = t;
+    USERNAME = u;
+    // Verify token still valid
+    fetch(API + '/' + ADMIN_PATH + '/news', { headers: { 'Authorization': 'Bearer ' + TOKEN } })
+      .then(function(r) { if (r.ok) showApp(); else logout(); })
+      .catch(function() { logout(); });
+  }
 })();
 
 function adminFetch(path, opts) {
   opts = opts || {};
   opts.headers = opts.headers || {};
-  opts.headers['Authorization'] = 'Bearer ' + API_KEY;
+  opts.headers['Authorization'] = 'Bearer ' + TOKEN;
   return fetch(API + '/' + ADMIN_PATH + path, opts);
 }
 
@@ -379,7 +498,8 @@ function esc(s) {
 }
 
 // Enter key on login
-document.getElementById('apiKeyInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') login(); });
+document.getElementById('passwordInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') login(); });
+document.getElementById('usernameInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('passwordInput').focus(); });
 </script>
 </body>
 </html>

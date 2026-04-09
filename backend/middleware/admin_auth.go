@@ -1,31 +1,32 @@
 package middleware
 
 import (
-	"crypto/subtle"
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/Seeyko/casamia-api/services"
 	"github.com/Seeyko/casamia-api/services/ratelimit"
 )
 
 type AdminAuthMiddleware struct {
-	apiKey     string
+	jwt        *services.JWTService
 	allowedIPs []string
 	limiter    *ratelimit.RateLimiter
 }
 
-func NewAdminAuthMiddleware(apiKey string, allowedIPs []string) *AdminAuthMiddleware {
+func NewAdminAuthMiddleware(jwt *services.JWTService, allowedIPs []string) *AdminAuthMiddleware {
 	limiter := ratelimit.NewRateLimiter(
-		3,
-		5,
-		30*time.Minute,
+		10,
+		20,
+		15*time.Minute,
 		5*time.Minute,
 	)
 	return &AdminAuthMiddleware{
-		apiKey:     apiKey,
+		jwt:        jwt,
 		allowedIPs: allowedIPs,
 		limiter:    limiter,
 	}
@@ -81,16 +82,22 @@ func (m *AdminAuthMiddleware) Authenticate(next http.Handler) http.Handler {
 			return
 		}
 
-		token := strings.TrimPrefix(authHeader, "Bearer ")
-		if subtle.ConstantTimeCompare([]byte(token), []byte(m.apiKey)) != 1 {
+		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+
+		claims, err := m.jwt.ValidateToken(tokenStr)
+		if err != nil {
 			m.limiter.RecordFailure(ip, "admin")
+			log.Printf("[ADMIN-AUTH] Invalid JWT: IP=%s, err=%v", ip, err)
 			time.Sleep(200 * time.Millisecond)
 			writeUnauthorized(w)
 			return
 		}
 
 		m.limiter.RecordSuccess(ip, "admin")
-		next.ServeHTTP(w, r)
+
+		// Store claims in context for handlers
+		ctx := context.WithValue(r.Context(), "claims", claims)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 

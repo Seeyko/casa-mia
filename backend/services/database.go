@@ -87,6 +87,16 @@ func (d *Database) migrate() error {
 		note        TEXT DEFAULT ''
 	);
 
+	CREATE TABLE IF NOT EXISTS admin_users (
+		id             SERIAL PRIMARY KEY,
+		username       TEXT UNIQUE NOT NULL,
+		password_hash  TEXT NOT NULL,
+		reset_token    TEXT DEFAULT '',
+		reset_expires  TIMESTAMPTZ,
+		created_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		updated_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+	);
+
 	CREATE INDEX IF NOT EXISTS idx_menu_items_category ON menu_items(category_id);
 	CREATE INDEX IF NOT EXISTS idx_menu_categories_section ON menu_categories(section);
 	CREATE INDEX IF NOT EXISTS idx_news_published ON news(published);

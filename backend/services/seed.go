@@ -2,6 +2,9 @@ package services
 
 import (
 	"log"
+	"os"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func SeedIfEmpty(db *Database) {
@@ -12,6 +15,22 @@ func SeedIfEmpty(db *Database) {
 	}
 
 	log.Println("Seeding database with initial data...")
+
+	// === ADMIN USER ===
+	adminUser := os.Getenv("ADMIN_USERNAME")
+	adminPass := os.Getenv("ADMIN_PASSWORD")
+	if adminUser == "" {
+		adminUser = "admin"
+	}
+	if adminPass == "" {
+		adminPass = "casamia2026"
+		log.Println("WARNING: Using default admin password — set ADMIN_PASSWORD env var in production!")
+	}
+	hash, err2 := bcrypt.GenerateFromPassword([]byte(adminPass), bcrypt.DefaultCost)
+	if err2 == nil {
+		db.DB.Exec(`INSERT INTO admin_users (username, password_hash) VALUES ($1, $2) ON CONFLICT (username) DO NOTHING`, adminUser, string(hash))
+		log.Printf("Admin user created: %s", adminUser)
+	}
 
 	// === LOCATIONS ===
 	db.DB.Exec(`INSERT INTO locations (name, slug, address, phone, opening_hours, order_method, order_info) VALUES

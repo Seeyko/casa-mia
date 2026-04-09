@@ -21,8 +21,10 @@ services:
       - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
       - FRONTEND_URL=${FRONTEND_URL}
-      - ADMIN_API_KEY=${ADMIN_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
       - ADMIN_SECRET_PATH=${ADMIN_SECRET_PATH}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - UPLOAD_DIR=/app/uploads
     volumes:
       - uploads:/app/uploads

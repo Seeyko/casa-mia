@@ -39,12 +39,6 @@ func main() {
 		adminSecretPath = "_admin"
 	}
 
-	adminAPIKey := os.Getenv("ADMIN_API_KEY")
-	if adminAPIKey == "" {
-		adminAPIKey = "dev-admin-key-change-me"
-		log.Println("WARNING: Using default ADMIN_API_KEY — set ADMIN_API_KEY env var in production!")
-	}
-
 	var adminAllowedIPs []string
 	if ips := os.Getenv("ADMIN_ALLOWED_IPS"); ips != "" {
 		for _, ip := range strings.Split(ips, ",") {
@@ -65,15 +59,19 @@ func main() {
 	// Seed data on first run
 	services.SeedIfEmpty(db)
 
+	// Initialize JWT service
+	jwtService := services.NewJWTService()
+
 	// Initialize handlers
 	imageHandler := handlers.NewImageHandler(uploadDir)
 	locationHandler := handlers.NewLocationHandler(db)
 	newsHandler := handlers.NewNewsHandler(db)
 	menuHandler := handlers.NewMenuHandler(db)
 	adminHandler := handlers.NewAdminHandler(db, imageHandler)
+	authHandler := handlers.NewAuthHandler(db, jwtService)
 
-	// Initialize admin auth middleware
-	adminAuth := custommiddleware.NewAdminAuthMiddleware(adminAPIKey, adminAllowedIPs)
+	// Initialize admin auth middleware (JWT-based)
+	adminAuth := custommiddleware.NewAdminAuthMiddleware(jwtService, adminAllowedIPs)
 
 	r := chi.NewRouter()
 
@@ -106,9 +104,17 @@ func main() {
 		r.Get("/menu", menuHandler.GetMenu)
 		r.Get("/images/{filename}", imageHandler.ServeImage)
 
-		// Admin endpoints (hidden behind secret path + API key)
+		// Auth endpoints (public — login + reset)
+		r.Post("/auth/login", authHandler.Login)
+		r.Post("/auth/reset-request", authHandler.RequestReset)
+		r.Post("/auth/reset-password", authHandler.ResetPassword)
+
+		// Admin endpoints (hidden behind secret path + JWT auth)
 		r.Route("/"+adminSecretPath, func(r chi.Router) {
 			r.Use(adminAuth.Authenticate)
+
+			// Auth (authenticated)
+			r.Post("/auth/change-password", authHandler.ChangePassword)
 
 			// News
 			r.Get("/news", adminHandler.ListNews)
@@ -144,6 +150,7 @@ func main() {
 	log.Printf("Upload directory: %s", uploadDir)
 	log.Printf("CORS origins: %v", allowedOrigins)
 	log.Printf("Admin API: /api/%s/*", adminSecretPath)
+	log.Printf("Auth: POST /api/auth/login")
 	log.Printf("===========================================")
 
 	server := &http.Server{
