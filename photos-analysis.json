@@ -1,0 +1,330 @@
+{
+  "status": "completed",
+  "total": 39,
+  "analyzed": 39,
+  "unique": 38,
+  "notes": "IMG_9081 apparaît dans lot 1 ET lot 3 (envoyé 2x par erreur), compté 2 fois dans total 39 mais 1 seule entrée unique.",
+  "photos": [
+    {
+      "file": "IMG_9073.jpg",
+      "category": "traiteur_dolci",
+      "subject": "Petits canolos (mini cannoli siciliens)",
+      "description": "Plateau rond de mini cannoli garnis de crème, saupoudrés de cacao — présentation en couronne",
+      "menu_match": ["Petit canolo"],
+      "usage": "Galerie traiteur / carte Dolci"
+    },
+    {
+      "file": "IMG_9074.jpg",
+      "category": "traiteur_coeur_apero",
+      "subject": "Planche charcuterie / carpaccio avec tomates cerises et citron",
+      "description": "Plateau de fines tranches de viande froide, tomates cerises, quartiers de citron et basilic",
+      "menu_match": ["Carpaccio Bresaola", "Planche charcuteries"],
+      "usage": "Carte traiteur — cœurs d'apéro"
+    },
+    {
+      "file": "IMG_9075.jpg",
+      "category": "traiteur_coeur_apero",
+      "subject": "Saumon Gravelax sur roquette",
+      "description": "Bouchées de saumon mariné aux herbes, tomates séchées, courgettes fines sur roquette",
+      "menu_match": ["Saumon Gravelax"],
+      "usage": "Carte traiteur — cœurs d'apéro"
+    },
+    {
+      "file": "IMG_9076.jpg",
+      "category": "traiteur_verrines",
+      "subject": "Verrines mousse de saumon fumé",
+      "description": "Verrines carrées transparentes avec mousse crémeuse et tranche de saumon fumé, paprika",
+      "menu_match": ["Mousse saumon fumé"],
+      "usage": "Carte traiteur — verrines"
+    },
+    {
+      "file": "IMG_9077.jpg",
+      "category": "traiteur_bouchees",
+      "subject": "Feuilletés salés assortis (palmiers, roulés pesto, tourtes)",
+      "description": "Grand plateau de feuilletés dorés : palmiers salés, roulés pesto, tourtes napolitaines",
+      "menu_match": ["Cake pesto mozza speck", "Tourte Napolitaine", "Bouchées feuilletées"],
+      "usage": "Carte traiteur — bouchées"
+    },
+    {
+      "file": "IMG_9079.jpg",
+      "category": "pizza_four_hero",
+      "subject": "Pizza devant le four à bois en flammes (artichauts/légumes)",
+      "description": "Pizza ronde avec artichauts, tomates, olives posée devant un four à bois avec flammes vives",
+      "menu_match": ["Pizza Végétarienne / Artichauts"],
+      "usage": "HERO BANNER PRIORITAIRE — photo signature pour home/carte"
+    },
+    {
+      "file": "IMG_9078.jpg",
+      "category": "traiteur_brochettes",
+      "subject": "Brochettes tomates cerises / mozza / jambon cru / pesto",
+      "description": "Brochettes colorées : tomates cerises rouges et jaunes, billes de mozzarella, jambon cru, pesto",
+      "menu_match": ["Tomates cerises/mozza/speck"],
+      "usage": "Carte traiteur — brochettes"
+    },
+    {
+      "file": "IMG_9080.jpg",
+      "category": "traiteur_brochettes",
+      "subject": "Brochettes crevettes marinées basilic + tomates séchées",
+      "description": "Brochettes de crevettes marinées au pesto/basilic, tomates séchées, olives noires",
+      "menu_match": ["Crevettes marinées basilic citron"],
+      "usage": "Carte traiteur — brochettes"
+    },
+    {
+      "file": "IMG_9081.jpg",
+      "category": "pizza_four_hero",
+      "subject": "Pizza champignons/jambon devant le four à bois en flammes",
+      "description": "Pizza garnie de champignons et jambon posée devant un four à bois en flammes",
+      "menu_match": ["Pizza Regina / Champignons Jambon"],
+      "usage": "HERO BANNER PRIORITAIRE — photo signature",
+      "note": "Envoyée 2x (lot 1 + lot 3)"
+    },
+    {
+      "file": "IMG_9082.jpg",
+      "category": "traiteur_brochettes",
+      "subject": "Brochettes bresaola / roquette / parmesan / balsamique",
+      "description": "Brochettes fines roulées de bresaola, roquette, copeaux de parmesan, réduction balsamique",
+      "menu_match": ["Bresaola/roquette/parmesan/tomates"],
+      "usage": "Carte traiteur — brochettes"
+    },
+    {
+      "file": "IMG_9083.jpg",
+      "category": "traiteur_bouchees",
+      "subject": "Bouchées melon / jambon cru piquées sur boule de mozzarella",
+      "description": "Présentation originale : cubes de melon et jambon cru piqués avec piques métalliques dorées sur grande boule de mozzarella",
+      "menu_match": ["Melon/jambon cru"],
+      "usage": "Carte traiteur — brochettes / bouchées (visuel signature)"
+    },
+    {
+      "file": "IMG_9084.jpg",
+      "category": "traiteur_dolci",
+      "subject": "Boîte assortiment desserts (tiramisu café, tiramisu choco pistache, panna cotta fruits rouges)",
+      "description": "Boîte traiteur 3 rangées : tiramisu café (éclats spéculoos), tiramisu choco pistache, panna cotta coulis fruits rouges",
+      "menu_match": ["Tiramisu café", "Tiramisu choco noisettes spéculoos", "Panna cotta fruits rouges"],
+      "usage": "Carte traiteur — Dolci (visuel complet)"
+    },
+    {
+      "file": "IMG_9085.jpg",
+      "category": "traiteur_planches",
+      "subject": "Planches charcuterie multiples prêtes à livrer",
+      "description": "Série de plateaux individuels de charcuterie (jambon, coppa, saucisson) avec focaccia et petites sauces",
+      "menu_match": ["Planche charcuteries", "Planches (7€/pers)"],
+      "usage": "Carte traiteur — Planches"
+    },
+    {
+      "file": "IMG_9088.jpg",
+      "category": "pizza_four_hero",
+      "subject": "Pizza polpettes/saucisse olives devant four à bois en flammes",
+      "description": "Pizza généreuse avec boulettes de viande / saucisse et olives, devant four à bois en flammes",
+      "menu_match": ["Pizza Polpette / Saucisse"],
+      "usage": "HERO BANNER PRIORITAIRE — photo signature"
+    },
+    {
+      "file": "IMG_9087.jpg",
+      "category": "traiteur_bouchees",
+      "subject": "Mini burgers polpettes + focaccia garnie en boîtes",
+      "description": "Boîtes traiteur : mini burgers pain brioché avec polpette de viande, bandes de focaccia garnie champignons",
+      "menu_match": ["Mini burger polpettes", "Focaccia garnie", "Hot dog italien"],
+      "usage": "Carte traiteur — bouchées / snacking"
+    },
+    {
+      "file": "IMG_9086.jpg",
+      "category": "traiteur_coeur_apero",
+      "subject": "Assortiment légumes croquants + sauces + bruschetta",
+      "description": "Plateaux endives, radis, carottes, céleri, chou-fleur, sauces tapenade et crème, pain grillé/bruschetta",
+      "menu_match": ["Assortiment légumes croquants"],
+      "usage": "Carte traiteur — cœurs d'apéro"
+    },
+    {
+      "file": "IMG_9089.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza blanche jambon cru / pesto en boîte",
+      "description": "Pizza base crème avec pesto, fromage, tranches de jambon cru San Daniele",
+      "menu_match": ["Pizza crème jambon cru pesto"],
+      "usage": "Galerie carte Pizzas (crème)"
+    },
+    {
+      "file": "IMG_9090.jpg",
+      "category": "traiteur_coeur_apero",
+      "subject": "Saumon gravelax grand plateau (variante)",
+      "description": "Grand plateau rectangulaire de saumon gravelax aux herbes, tomates séchées, courgettes",
+      "menu_match": ["Saumon Gravelax"],
+      "usage": "Carte traiteur — cœurs d'apéro (alternative à IMG_9075)"
+    },
+    {
+      "file": "IMG_9091.jpg",
+      "category": "traiteur_brochettes",
+      "subject": "Assortiment plateaux brochettes (bresaola, crevettes, poulet, tomate/mozza)",
+      "description": "Vue ensemble brochettes : bresaola/roquette/balsamique, crevettes, poulet/tomates confites, tomate-mozza-speck",
+      "menu_match": ["Brochettes (toutes variétés)"],
+      "usage": "Carte traiteur — visuel d'ensemble brochettes"
+    },
+    {
+      "file": "IMG_9092.jpg",
+      "category": "traiteur_verrines",
+      "subject": "Verrines tartare bœuf à l'italienne",
+      "description": "Verrines carrées : tartare bœuf aux câpres, olives vertes, tomate cerise en garniture",
+      "menu_match": ["Tartare bœuf à l'italienne"],
+      "usage": "Carte traiteur — verrines"
+    },
+    {
+      "file": "IMG_9093.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza Quattro Stagioni (artichauts, champignons, anchois, jambon)",
+      "description": "Pizza à 4 secteurs distincts : artichauts, champignons, anchois, jambon — en boîte",
+      "menu_match": ["Pizza Quattro Stagioni / 4 saisons"],
+      "usage": "Galerie carte Pizzas"
+    },
+    {
+      "file": "IMG_9095.jpg",
+      "category": "pizza_four_hero",
+      "subject": "Calzone fermé dans le four à bois en flammes",
+      "description": "Calzone doré bombé dans la bouche du four à bois, flammes visibles au fond",
+      "menu_match": ["Calzone"],
+      "usage": "HERO / galerie Pizzas — photo Calzone"
+    },
+    {
+      "file": "IMG_9096.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza Diavola (salami piquant + olives noires)",
+      "description": "Pizza rouge avec tranches de salami piquant style spianata et olives noires",
+      "menu_match": ["Pizza Diavola"],
+      "usage": "Galerie carte Pizzas"
+    },
+    {
+      "file": "IMG_9097.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza crème jambon cru / pesto (variante)",
+      "description": "Pizza base crème, pesto vert, tranches de jambon cru — angle boîte différent de IMG_9089",
+      "menu_match": ["Pizza crème jambon cru pesto"],
+      "usage": "Galerie carte Pizzas (crème)"
+    },
+    {
+      "file": "IMG_9099.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza crème bacon / oignons rouges / olives (Boscaiola style)",
+      "description": "Pizza base crème blanche avec lardons/bacon grillés, oignons rouges, olives noires",
+      "menu_match": ["Pizza Boscaiola / Bacon oignons rouges"],
+      "usage": "Galerie carte Pizzas (crème)"
+    },
+    {
+      "file": "IMG_9098.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza truffe noire (base crème + lamelles de truffe)",
+      "description": "Pizza base crème blanche parsemée de lamelles rondes de truffe noire",
+      "menu_match": ["Pizza Truffe / Tartufo"],
+      "usage": "Galerie carte Pizzas (crème) — pizza premium"
+    },
+    {
+      "file": "IMG_9100.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza bresaola / billes mozza / roquette / balsamique",
+      "description": "Pizza rouge avec bresaola fine, billes de mozzarella, roquette, zigzag de réduction balsamique",
+      "menu_match": ["Pizza Bresaola balsamique"],
+      "usage": "Galerie carte Pizzas"
+    },
+    {
+      "file": "IMG_9101.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza bresaola sur roquette (simple)",
+      "description": "Pizza base rouge avec grandes tranches de bresaola et feuilles de roquette",
+      "menu_match": ["Pizza Bresaola"],
+      "usage": "Galerie carte Pizzas"
+    },
+    {
+      "file": "IMG_9102.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza thon / olives / poivrons (Siciliana style)",
+      "description": "Pizza base rouge garnie de thon, poivrons jaunes/oranges, oignons, olives noires",
+      "menu_match": ["Pizza Tonno / Siciliana"],
+      "usage": "Galerie carte Pizzas"
+    },
+    {
+      "file": "IMG_9103.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza crème bacon / oignons rouges (variante proche de IMG_9099)",
+      "description": "Pizza base crème blanche avec lardons, oignons rouges, olives — autre angle/version",
+      "menu_match": ["Pizza Boscaiola / Bacon oignons"],
+      "usage": "Galerie carte Pizzas (crème)"
+    },
+    {
+      "file": "IMG_9104.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza truffe noire (variante)",
+      "description": "Pizza base crème avec lamelles de truffe noire — autre prise de vue",
+      "menu_match": ["Pizza Truffe / Tartufo"],
+      "usage": "Galerie carte Pizzas (crème premium)"
+    },
+    {
+      "file": "IMG_9105.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza bresaola / mozza billes / balsamique (variante)",
+      "description": "Pizza rouge avec bresaola, billes mozza, roquette, balsamique — autre prise de vue",
+      "menu_match": ["Pizza Bresaola balsamique"],
+      "usage": "Galerie carte Pizzas"
+    },
+    {
+      "file": "IMG_9106.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza bresaola simple (variante)",
+      "description": "Pizza avec grandes tranches fines de bresaola sur roquette — autre prise",
+      "menu_match": ["Pizza Bresaola"],
+      "usage": "Galerie carte Pizzas"
+    },
+    {
+      "file": "IMG_9109.jpg",
+      "category": "traiteur_planches",
+      "subject": "Plateau charcuterie + fromages (jambon, coppa, salami, provolone)",
+      "description": "Plateau aligné : charcuterie assortie (jambon blanc, jambon cru, coppa, salami), bâtons de fromage pecorino/provolone",
+      "menu_match": ["Planche charcuteries/fromages"],
+      "usage": "Carte traiteur — Planches mixtes"
+    },
+    {
+      "file": "IMG_9111.jpg",
+      "category": "traiteur_bouchees",
+      "subject": "Navettes saumon / tarama pavot en plateau",
+      "description": "Grand plateau doré de navettes brioche garnies tarama ou saumon avec pavot, plus plateau annexe de verrines",
+      "menu_match": ["Navette saumon", "Navette gorgonzola bresaola"],
+      "usage": "Carte traiteur — bouchées (navettes)"
+    },
+    {
+      "file": "IMG_9112.jpg",
+      "category": "pizza_boite",
+      "subject": "Pizza burrata / tomates colorées / roquette / piquillos",
+      "description": "Pizza rouge avec boule de burrata au centre, tomates cerises jaunes et rouges, roquette, poivrons piquillos",
+      "menu_match": ["Pizza Burrata", "Pizza Estiva"],
+      "usage": "Galerie carte Pizzas — pizza signature premium"
+    },
+    {
+      "file": "IMG_9116.jpg",
+      "category": "traiteur_planches",
+      "subject": "Plateau charcuteries XL avec rose de coppa au centre",
+      "description": "Grande planche de charcuteries assorties (coppa, jambon cru, salami, mortadelle) dressée en composition avec rose de coppa séchée au centre",
+      "menu_match": ["Planche charcuteries (version premium)"],
+      "usage": "Carte traiteur — Planches (visuel signature premium)"
+    },
+    {
+      "file": "IMG_9117.jpg",
+      "category": "traiteur_planches",
+      "subject": "Camembert rôti au four herbes + charcuterie",
+      "description": "Boîte avec gros camembert rôti au four surmonté d'herbes, accompagné de charcuterie (coppa, jambon blanc, jambon cru)",
+      "menu_match": ["Planche fromages (Camembert rôti)", "Planche mixte"],
+      "usage": "Carte traiteur — Planches / fromages chauds (visuel signature)"
+    }
+  ],
+  "summary": {
+    "pizza_four_hero": ["IMG_9079", "IMG_9081", "IMG_9088", "IMG_9095"],
+    "pizza_boite": ["IMG_9089", "IMG_9093", "IMG_9096", "IMG_9097", "IMG_9099", "IMG_9098", "IMG_9100", "IMG_9101", "IMG_9102", "IMG_9103", "IMG_9104", "IMG_9105", "IMG_9106", "IMG_9112"],
+    "traiteur_coeur_apero": ["IMG_9074", "IMG_9075", "IMG_9086", "IMG_9090"],
+    "traiteur_bouchees": ["IMG_9077", "IMG_9083", "IMG_9087", "IMG_9111"],
+    "traiteur_brochettes": ["IMG_9078", "IMG_9080", "IMG_9082", "IMG_9091"],
+    "traiteur_verrines": ["IMG_9076", "IMG_9092"],
+    "traiteur_planches": ["IMG_9085", "IMG_9109", "IMG_9116", "IMG_9117"],
+    "traiteur_dolci": ["IMG_9073", "IMG_9084"]
+  },
+  "hero_candidates_priority": [
+    "IMG_9079 (pizza artichauts devant four flammes)",
+    "IMG_9081 (pizza champignons/jambon devant four flammes)",
+    "IMG_9088 (pizza polpettes devant four flammes)",
+    "IMG_9095 (calzone dans four flammes)"
+  ]
+}
