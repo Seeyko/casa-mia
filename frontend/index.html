@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CasaMia — Pizzeria Artisanale Sicilienne | Entraigues &amp; Althen</title>
+  <meta name="description" content="Pizzeria artisanale sicilienne a Entraigues-sur-la-Sorgue et Althen-des-Paluds. Produits importes de Sicile par un vrai chef sicilien. Note 4.9/5.">
+  <meta property="og:title" content="CasaMia — Pizzeria Artisanale Sicilienne">
+  <meta property="og:description" content="Pizzas artisanales, traiteur italien, epicerie fine. Deux adresses dans le Vaucluse.">
+  <meta property="og:image" content="images/pizza-gourmet-roquette.jpg">
+  <meta property="og:type" content="restaurant">
+  <meta property="og:locale" content="fr_FR">
+  <link rel="icon" type="image/png" href="images/logo-casamia.png">
+  <link rel="stylesheet" href="css/style.css?v=3">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "CasaMia Pizzeria",
+    "image": "images/pizza-gourmet-roquette.jpg",
+    "description": "Pizzeria artisanale sicilienne a Entraigues-sur-la-Sorgue et Althen-des-Paluds. Produits importes de Sicile.",
+    "servesCuisine": ["Italian", "Pizza", "Sicilian"],
+    "priceRange": "$$",
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "addressLocality": "Entraigues-sur-la-Sorgue",
+        "postalCode": "84320",
+        "streetAddress": "51 Rue Laurent Bertrand",
+        "addressCountry": "FR"
+      },
+      {
+        "@type": "PostalAddress",
+        "addressLocality": "Althen-des-Paluds",
+        "postalCode": "84210",
+        "streetAddress": "254 Avenue Ernest Perrin",
+        "addressCountry": "FR"
+      }
+    ],
+    "telephone": "+33645794930",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "298",
+      "bestRating": "5"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="/" class="header__logo"><img src="images/logo-casamia.png" alt="CasaMia" style="height:44px;width:auto;"></a>
+      <nav class="nav" id="nav" aria-label="Navigation principale">
+        <a href="/" class="nav__link nav__link--active">Accueil</a>
+        <a href="/menu" class="nav__link">La Carte</a>
+        <a href="/histoire" class="nav__link">Notre Histoire</a>
+        <a href="/#nos-adresses" class="nav__link">Contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+    </div>
+  </header>
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__bg" style="background-image: url('images/pizza-four-hero.jpg');"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <img src="images/logo-casamia.png" alt="CasaMia" class="hero__logo">
+      <div class="hero__badge">Pizzeria &bull; Traiteur &bull; Epicerie</div>
+      <h1 class="hero__title">La Sicile au coeur du Vaucluse</h1>
+      <p class="hero__subtitle">Pizzeria artisanale &bull; Traiteur italien &bull; Epicerie fine<br>Par un vrai chef sicilien</p>
+      <div class="hero__stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> <span>4.9/5 — 298 avis</span></div>
+
+      <!-- Status badges (loaded dynamically) -->
+      <div class="status-badges" id="statusBadges">
+        <div class="status-badge"><span class="status-badge__label">Chargement...</span></div>
+      </div>
+
+      <div class="btn-group" style="justify-content: center;">
+        <button class="btn btn--gold" id="phoneBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Appelez-nous
+        </button>
+        <a href="/menu" class="btn btn--outline">Decouvrir la carte</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Phone popover overlay (desktop) -->
+  <div class="phone-popover-overlay" id="phonePopoverOverlay"></div>
+
+  <!-- Phone popover (desktop) — outside hero to avoid stacking context -->
+  <div class="phone-popover" id="phonePopover">
+    <div class="phone-popover__item">
+      <div class="phone-popover__info">
+        <span class="phone-popover__name">Entraigues-sur-la-Sorgue</span>
+        <span class="phone-popover__address">51 Rue Laurent Bertrand</span>
+      </div>
+      <a href="tel:0645794930" class="phone-popover__cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        06 45 79 49 30
+      </a>
+    </div>
+    <div class="phone-popover__divider"></div>
+    <div class="phone-popover__item">
+      <div class="phone-popover__info">
+        <span class="phone-popover__name">Althen-des-Paluds</span>
+        <span class="phone-popover__address">254 Ave Ernest Perrin</span>
+      </div>
+      <a href="tel:0490361633" class="phone-popover__cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        04 90 36 16 33
+      </a>
+    </div>
+  </div>
+
+  <!-- Phone bottom sheet (mobile) -->
+  <div class="phone-overlay" id="phoneOverlay"></div>
+  <div class="phone-bottomsheet" id="phoneBottomsheet">
+    <div class="phone-bottomsheet__handle"></div>
+    <div class="phone-bottomsheet__title">Appelez-nous</div>
+    <div class="phone-bottomsheet__item">
+      <div>
+        <div style="font-weight:600;">Entraigues-sur-la-Sorgue</div>
+        <div style="color:var(--text-muted);font-size:.85rem;">51 Rue Laurent Bertrand</div>
+      </div>
+      <a href="tel:0645794930">Appeler</a>
+    </div>
+    <div class="phone-bottomsheet__item">
+      <div>
+        <div style="font-weight:600;">Althen-des-Paluds</div>
+        <div style="color:var(--text-muted);font-size:.85rem;">254 Ave Ernest Perrin</div>
+      </div>
+      <a href="tel:0490361633">Appeler</a>
+    </div>
+  </div>
+
+  <!-- News Section -->
+  <section class="section" id="newsSection" style="display:none;">
+    <div class="container">
+      <div class="text-center fade-in">
+        <h2 class="section__title">Actualites</h2>
+        <hr class="decorative-line">
+      </div>
+      <div class="news-grid" id="newsGrid" style="margin-top:32px;"></div>
+    </div>
+  </section>
+
+  <!-- Why CasaMia -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="text-center fade-in">
+        <h2 class="section__title">Trois raisons de nous faire confiance</h2>
+        <hr class="decorative-line">
+      </div>
+      <div class="card-grid" style="margin-top:40px;">
+        <div class="value-card fade-in">
+          <div style="margin-bottom:16px;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg></div>
+          <h3>Un chef sicilien authentique</h3>
+          <p>Notre chef est ne en Sicile, forme en Sicile, et cuisine comme en Sicile. Chaque recette est un hommage a sa terre natale.</p>
+        </div>
+        <div class="value-card fade-in">
+          <div style="margin-bottom:16px;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <h3>Des produits importes de Sicile</h3>
+          <p>Farine de ble dur, tomates San Marzano, huile d'olive extra-vierge, anchois de Sciacca... Nous importons ce qui fait la difference.</p>
+        </div>
+        <div class="value-card fade-in">
+          <div style="margin-bottom:16px;display:flex;gap:2px;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <h3>4.9/5 — Nos clients parlent pour nous</h3>
+          <p>Plus de 298 avis verifies. Nos pizzas, nos arancini, nos cannoli... Tout est fait maison, avec passion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center fade-in">
+        <h2 class="section__title">Nos creations</h2>
+        <hr class="decorative-line">
+      </div>
+      <div class="gallery-grid gallery-grid--4col" style="margin-top:32px;">
+        <div class="fade-in"><img src="images/hero-pizza-polpettes-four.jpg" alt="Pizza polpettes au four" width="600" height="450" loading="lazy" decoding="async"></div>
+        <div class="fade-in"><img src="images/planche-charcuterie-premium.jpg" alt="Planche charcuterie premium" width="450" height="600" loading="lazy" decoding="async"></div>
+        <div class="fade-in"><img src="images/pizza-burrata.jpg" alt="Pizza burrata" width="450" height="600" loading="lazy" decoding="async"></div>
+        <div class="fade-in"><img src="images/pizza-tartufo.jpg" alt="Pizza tartufo" width="450" height="600" loading="lazy" decoding="async"></div>
+        <div class="fade-in"><img src="images/pizza-bresaola.jpg" alt="Pizza bresaola" width="450" height="600" loading="lazy" decoding="async"></div>
+        <div class="fade-in"><img src="images/dolci-assortiment.jpg" alt="Assortiment de dolci" width="450" height="600" loading="lazy" decoding="async"></div>
+        <div class="fade-in"><img src="images/ravioles-burrata-pesto.jpg" alt="Ravioles burrata pesto" width="450" height="600" loading="lazy" decoding="async"></div>
+        <div class="fade-in"><img src="images/brochettes-tomate-mozza-speck.jpg" alt="Brochettes tomate mozza speck" width="450" height="600" loading="lazy" decoding="async"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="text-center fade-in">
+        <a href="https://maps.app.goo.gl/MpP9kDVa18ibbMCu6" target="_blank" rel="noopener" class="google-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <div>
+            <div class="google-badge__score">4,9 <span class="google-badge__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span></div>
+            <div class="google-badge__count">298 avis Google</div>
+          </div>
+        </a>
+        <h2 class="section__title">Ce que disent nos clients</h2>
+        <hr class="decorative-line">
+      </div>
+      <div class="reviews-grid reviews-grid--4col" style="margin-top:32px;">
+        <div class="review-card fade-in">
+          <div class="review-card__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <p class="review-card__text">"Ce soir je viens de manger la meilleure pizza raclette de ma vie. Votre jambon est un pur délice !!! Et la pâte d'une légèreté peu commune... Un régal"</p>
+          <p class="review-card__author">Olivier Richard <span>sur Google</span></p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <p class="review-card__text">"Excellent ! Longtemps que je n'avais pas mangé une aussi bonne pizza, pâte longue fermentation, garnie généreusement, de bons ingrédients, le tout pour 12 euros."</p>
+          <p class="review-card__author">Varg Veum <span>sur Google</span></p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <p class="review-card__text">"Une cuisine italienne d'exception à des prix plus qu'abordables, ce repas fût un pur moment de plaisir ! L'accueil est très convivial et chaleureux."</p>
+          <p class="review-card__author">Valériane Clémente <span>sur Google</span></p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <p class="review-card__text">"Au Top qualité prix excellent y a pas mieux. Ne cherchez pas ailleurs, Avignon hors de prix et qualité très moyenne. Ici accueil très agréable et pizza excellente."</p>
+          <p class="review-card__author">Stéphane Berdah <span>sur Google</span></p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <p class="review-card__text">"Je recommande vivement cette épicerie fine et traiteur sicilien. Les produits sont toujours excellents, on sent vraiment la qualité et l'authenticité dans tout ce qu'ils proposent."</p>
+          <p class="review-card__author">Léa Mancino <span>sur Google</span></p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <p class="review-card__text">"Si vous aimez les pizzas à croûtes épaisses et bien garnies, alors vous êtes à la bonne adresse. Elles sont excellentes et j'apprécie d'avoir des pizzas que je ne retrouve pas ailleurs."</p>
+          <p class="review-card__author">Stéphanie Queirel <span>sur Google</span></p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <p class="review-card__text">"Meilleure pizzeria de la région, les pizzas sont généreuses et savoureuses. Le personnel est adorable et le cadre très agréable. On y retourne à chaque fois avec plaisir !"</p>
+          <p class="review-card__author">Marc Dupont <span>sur Google</span></p>
+        </div>
+        <div class="review-card fade-in">
+          <div class="review-card__stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <p class="review-card__text">"Découvert par hasard et quel bonheur ! Des produits frais, une pâte incroyable et un accueil chaleureux. La quattro stagioni est à tomber. Foncez les yeux fermés !"</p>
+          <p class="review-card__author">Sophie Martin <span>sur Google</span></p>
+        </div>
+      </div>
+      <div class="text-center" style="margin-top:32px;">
+        <a href="https://maps.app.goo.gl/MpP9kDVa18ibbMCu6" target="_blank" rel="noopener" class="btn btn--outline" style="font-size:.9rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Voir les 298 avis sur Google
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nos adresses -->
+  <section class="section" id="nos-adresses">
+    <div class="container">
+      <div class="text-center fade-in">
+        <h2 class="section__title">Nos adresses</h2>
+        <p class="section__subtitle">Retrouvez-nous dans nos deux pizzerias du Vaucluse</p>
+        <hr class="decorative-line">
+      </div>
+      <div class="locations-grid" id="locationsGrid" style="margin-top:32px;">
+        <div class="location-card"><p style="color:var(--text-muted);">Chargement...</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <img src="images/logo-casamia.png" alt="CasaMia" style="height:50px;width:auto;margin-bottom:12px;">
+          <h3 class="footer__title">CasaMia</h3>
+          <p class="footer__text">Pizzeria artisanale, traiteur italien et epicerie fine. Par un vrai chef sicilien, avec des produits importes de Sicile.</p>
+        </div>
+        <div>
+          <h3 class="footer__title">Navigation</h3>
+          <a href="/" class="footer__link">Accueil</a>
+          <a href="/menu" class="footer__link">La Carte</a>
+          <a href="/histoire" class="footer__link">Notre Histoire</a>
+          <a href="/#nos-adresses" class="footer__link">Nos Adresses</a>
+        </div>
+        <div>
+          <h3 class="footer__title">Entraigues-sur-la-Sorgue</h3>
+          <p class="footer__text">51 Rue Laurent Bertrand, 84320</p>
+          <a href="tel:0645794930" class="footer__link" style="color:var(--gold);font-weight:600;">06 45 79 49 30</a>
+        </div>
+        <div>
+          <h3 class="footer__title">Althen-des-Paluds</h3>
+          <p class="footer__text">254 Avenue Ernest Perrin, 84210</p>
+          <a href="tel:0490361633" class="footer__link" style="color:var(--gold);font-weight:600;">04 90 36 16 33</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>&copy; 2026 CasaMia Pizzeria — Entraigues-sur-la-Sorgue &amp; Althen-des-Paluds. Tous droits reserves.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

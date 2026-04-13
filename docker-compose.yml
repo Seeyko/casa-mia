@@ -1,0 +1,55 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    environment:
+      - API_URL=${API_URL}
+      - ADMIN_SECRET_PATH=${ADMIN_SECRET_PATH}
+    expose:
+      - "4200"
+    depends_on:
+      - backend
+    networks:
+      - dokploy-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_SECRET_PATH=${ADMIN_SECRET_PATH}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - UPLOAD_DIR=/app/uploads
+    volumes:
+      - uploads:/app/uploads
+    expose:
+      - "3000"
+    depends_on:
+      - postgres
+    networks:
+      - dokploy-network
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=casamia
+      - POSTGRES_USER=${POSTGRES_USER:-casamia}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - dokploy-network
+
+volumes:
+  uploads:
+  pgdata:
+
+networks:
+  dokploy-network:
+    external: true
