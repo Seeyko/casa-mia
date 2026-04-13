@@ -57,7 +57,7 @@ func main() {
 	defer db.Close()
 
 	// Seed data on first run
-	services.SeedIfEmpty(db)
+	services.SeedIfEmpty(db, uploadDir)
 
 	// Initialize JWT service
 	jwtService := services.NewJWTService()

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin — CasaMia</title>
-  <link rel="icon" type="image/png" href="images/logo-casamia.jpg">
+  <link rel="icon" type="image/png" href="images/logo-casamia.png">
   <style>
     :root {
       --bg: #0F0D0B; --bg2: #1A1714; --bg3: #211E1A; --text: #F5F0E8;
@@ -161,6 +161,7 @@
   <div class="form-modal" id="formModal"></div>
 </div>
 
+<script src="js/config.js"></script>
 <script>
 const API = (window.APP_CONFIG?.API_URL || '') + '/api';
 const ADMIN_PATH = window.APP_CONFIG?.ADMIN_SECRET_PATH || '_admin';
@@ -322,7 +323,7 @@ function openNewsForm(data) {
     '<div class="form-group"><label>Titre</label><input id="f_title" value="' + esc(d.title || '') + '"></div>' +
     '<div class="form-group"><label>Contenu</label><textarea id="f_content">' + esc(d.content || '') + '</textarea></div>' +
     '<div class="form-group"><label>Image</label><input type="file" id="f_image" accept="image/*"></div>' +
-    '<div class="form-group"><label><input type="checkbox" id="f_published"' + (d.published ? ' checked' : '') + '> Publie</label></div>' +
+    '<div class="form-group"><label><input type="checkbox" id="f_published"' + (d.id ? (d.published ? ' checked' : '') : ' checked') + '> Publie</label></div>' +
     '<div class="form-actions"><button class="form-cancel" onclick="closeForm()">Annuler</button>' +
     '<button class="btn btn-primary" onclick="saveNews(' + (d.id || 'null') + ')">Enregistrer</button></div>';
   document.getElementById('formOverlay').classList.add('active');

@@ -15,8 +15,8 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
