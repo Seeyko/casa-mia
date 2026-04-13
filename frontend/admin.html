@@ -142,7 +142,6 @@
     <button class="btn btn-primary btn-add" onclick="openCategoryForm()">+ Ajouter une categorie</button>
     <div id="categoriesList"></div>
   </div>
-</div>
 
   <!-- Settings Panel -->
   <div id="panel-settings" class="panel">
@@ -400,7 +399,7 @@ function saveCategory(id) {
   var body = { name: document.getElementById('f_catname').value, section: document.getElementById('f_catsection').value, sort_order: parseInt(document.getElementById('f_catorder').value) || 0 };
   var method = id ? 'PUT' : 'POST';
   var path = id ? '/menu/categories/' + id : '/menu/categories';
-  adminFetch(path, { method: method, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY }, body: JSON.stringify(body) })
+  adminFetch(path, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
     .then(function() { closeForm(); loadCategories(); loadCategoryFilter(); });
 }
 
