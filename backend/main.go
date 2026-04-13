@@ -88,12 +88,6 @@ func main() {
 		MaxAge:           300,
 	}))
 
-	// Health check
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, `{"status":"ok","service":"casamia-api"}`)
-	})
-
 	// Dynamic config.js for frontend
 	r.Get("/js/config.js", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/javascript")
