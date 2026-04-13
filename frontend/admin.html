@@ -86,20 +86,20 @@
     <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="current-password">
     <button onclick="login()">Connexion</button>
     <p class="error" id="loginError"></p>
-    <p style="margin-top:16px;"><a href="#" onclick="showResetForm();return false;" style="font-size:.85rem;color:var(--text2);">Mot de passe oublie ?</a></p>
+    <p style="margin-top:16px;"><a href="#" onclick="showResetForm();return false;" style="font-size:.85rem;color:var(--text2);">Mot de passe oublié ?</a></p>
   </div>
   <div id="resetForm" style="display:none;">
-    <p style="color:var(--text2);font-size:.9rem;margin-bottom:16px;">Entrez votre nom d'utilisateur pour generer un token de reinitialisation (visible dans les logs serveur).</p>
+    <p style="color:var(--text2);font-size:.9rem;margin-bottom:16px;">Entrez votre nom d'utilisateur pour générer un token de réinitialisation (visible dans les logs serveur).</p>
     <input type="text" id="resetUsername" placeholder="Nom d'utilisateur">
     <button onclick="requestReset()">Demander un reset</button>
     <div id="resetTokenForm" style="display:none;margin-top:16px;">
-      <p style="color:var(--green);font-size:.85rem;margin-bottom:12px;">Token genere. Consultez les logs du serveur, puis collez-le ici :</p>
-      <input type="text" id="resetToken" placeholder="Token de reinitialisation">
+      <p style="color:var(--green);font-size:.85rem;margin-bottom:12px;">Token généré. Consultez les logs du serveur, puis collez-le ici :</p>
+      <input type="text" id="resetToken" placeholder="Token de réinitialisation">
       <input type="password" id="resetNewPassword" placeholder="Nouveau mot de passe (min 6 car.)">
-      <button onclick="resetPassword()">Reinitialiser</button>
+      <button onclick="resetPassword()">Réinitialiser</button>
     </div>
     <p class="error" id="resetError"></p>
-    <p style="margin-top:16px;"><a href="#" onclick="showLoginForm();return false;" style="font-size:.85rem;color:var(--text2);">Retour a la connexion</a></p>
+    <p style="margin-top:16px;"><a href="#" onclick="showLoginForm();return false;" style="font-size:.85rem;color:var(--text2);">Retour à la connexion</a></p>
   </div>
 </div>
 
@@ -109,20 +109,20 @@
     <h1>CasaMia Admin</h1>
     <div style="display:flex;gap:8px;align-items:center;">
       <span id="userDisplay" style="color:var(--text2);font-size:.85rem;"></span>
-      <button class="logout" onclick="logout()">Deconnexion</button>
+      <button class="logout" onclick="logout()">Déconnexion</button>
     </div>
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('news')">Actualites</button>
+    <button class="tab active" onclick="switchTab('news')">Actualités</button>
     <button class="tab" onclick="switchTab('menu')">Carte &amp; Menus</button>
-    <button class="tab" onclick="switchTab('categories')">Categories</button>
-    <button class="tab" onclick="switchTab('settings')">Parametres</button>
+    <button class="tab" onclick="switchTab('catégories')">Catégories</button>
+    <button class="tab" onclick="switchTab('settings')">Paramètres</button>
   </div>
 
   <!-- News Panel -->
   <div id="panel-news" class="panel active">
-    <button class="btn btn-primary btn-add" onclick="openNewsForm()">+ Ajouter une actualite</button>
+    <button class="btn btn-primary btn-add" onclick="openNewsForm()">+ Ajouter une actualité</button>
     <div id="newsList"></div>
   </div>
 
@@ -130,17 +130,17 @@
   <div id="panel-menu" class="panel">
     <div style="display:flex;gap:8px;margin-bottom:16px;">
       <select id="menuCategoryFilter" onchange="loadItems()" style="padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.9rem;">
-        <option value="">Toutes les categories</option>
+        <option value="">Toutes les catégories</option>
       </select>
       <button class="btn btn-primary" onclick="openItemForm()">+ Ajouter un item</button>
     </div>
     <div id="itemsList"></div>
   </div>
 
-  <!-- Categories Panel -->
-  <div id="panel-categories" class="panel">
-    <button class="btn btn-primary btn-add" onclick="openCategoryForm()">+ Ajouter une categorie</button>
-    <div id="categoriesList"></div>
+  <!-- Catégories Panel -->
+  <div id="panel-catégories" class="panel">
+    <button class="btn btn-primary btn-add" onclick="openCategoryForm()">+ Ajouter une catégorie</button>
+    <div id="catégoriesList"></div>
   </div>
 
   <!-- Settings Panel -->
@@ -148,10 +148,10 @@
     <div class="card" style="max-width:400px;">
       <h3 style="margin-bottom:16px;color:var(--gold);">Changer le mot de passe</h3>
       <div class="form-group"><label>Mot de passe actuel</label><input type="password" id="settings_currentpw"></div>
-      <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="settings_newpw" placeholder="Min 6 caracteres"></div>
+      <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="settings_newpw" placeholder="Min 6 caractères"></div>
       <button class="btn btn-primary" onclick="changePassword()" style="margin-top:8px;">Enregistrer</button>
       <p class="error" id="settingsError" style="margin-top:8px;"></p>
-      <p id="settingsSuccess" style="color:var(--green);font-size:.85rem;margin-top:8px;display:none;">Mot de passe modifie avec succes.</p>
+      <p id="settingsSuccess" style="color:var(--green);font-size:.85rem;margin-top:8px;display:none;">Mot de passe modifié avec succès.</p>
     </div>
   </div>
 </div>
@@ -218,7 +218,7 @@ function resetPassword() {
       if (!res.ok) throw new Error(res.data.error || 'Erreur');
       document.getElementById('resetError').textContent = '';
       document.getElementById('resetError').style.color = 'var(--green)';
-      document.getElementById('resetError').textContent = 'Mot de passe reinitialise ! Retournez a la connexion.';
+      document.getElementById('resetError').textContent = 'Mot de passe réinitialisé ! Retournez à la connexion.';
     })
     .catch(function(e) {
       document.getElementById('resetError').style.color = 'var(--red)';
@@ -296,16 +296,16 @@ function switchTab(name) {
   document.getElementById('panel-' + name).classList.add('active');
 }
 
-function loadAll() { loadNews(); loadCategories(); loadCategoryFilter(); loadItems(); }
+function loadAll() { loadNews(); loadCatégories(); loadCategoryFilter(); loadItems(); }
 
 // ===== NEWS =====
 function loadNews() {
   adminFetch('/news').then(function(r) { return r.json(); }).then(function(news) {
     var el = document.getElementById('newsList');
-    if (!news.length) { el.innerHTML = '<p style="color:var(--text2);">Aucune actualite.</p>'; return; }
+    if (!news.length) { el.innerHTML = '<p style="color:var(--text2);">Aucune actualité.</p>'; return; }
     el.innerHTML = news.map(function(n) {
       var img = n.image_path ? '<img class="card-img" src="' + API + '/images/' + n.image_path + '">' : '';
-      var badge = n.published ? '<span class="badge badge-green">Publie</span>' : '<span class="badge badge-gray">Brouillon</span>';
+      var badge = n.published ? '<span class="badge badge-green">Publié</span>' : '<span class="badge badge-gray">Brouillon</span>';
       return '<div class="card"><div class="card-header"><div style="display:flex;align-items:center;">' + img +
         '<div><span class="card-title">' + esc(n.title) + '</span> ' + badge +
         '<div class="card-meta">' + new Date(n.created_at).toLocaleDateString('fr-FR') + '</div></div></div>' +
@@ -319,11 +319,11 @@ function openNewsForm(data) {
   var d = data || {};
   var isEdit = !!d.id;
   document.getElementById('formModal').innerHTML =
-    '<h3>' + (isEdit ? 'Modifier' : 'Nouvelle') + ' actualite</h3>' +
+    '<h3>' + (isEdit ? 'Modifier' : 'Nouvelle') + ' actualité</h3>' +
     '<div class="form-group"><label>Titre</label><input id="f_title" value="' + esc(d.title || '') + '"></div>' +
     '<div class="form-group"><label>Contenu</label><textarea id="f_content">' + esc(d.content || '') + '</textarea></div>' +
     '<div class="form-group"><label>Image</label><input type="file" id="f_image" accept="image/*"></div>' +
-    '<div class="form-group"><label><input type="checkbox" id="f_published"' + (d.id ? (d.published ? ' checked' : '') : ' checked') + '> Publie</label></div>' +
+    '<div class="form-group"><label><input type="checkbox" id="f_published"' + (d.id ? (d.published ? ' checked' : '') : ' checked') + '> Publié</label></div>' +
     '<div class="form-actions"><button class="form-cancel" onclick="closeForm()">Annuler</button>' +
     '<button class="btn btn-primary" onclick="saveNews(' + (d.id || 'null') + ')">Enregistrer</button></div>';
   document.getElementById('formOverlay').classList.add('active');
@@ -350,14 +350,14 @@ function saveNews(id) {
 }
 
 function deleteNews(id) {
-  if (!confirm('Supprimer cette actualite ?')) return;
+  if (!confirm('Supprimer cette actualité ?')) return;
   adminFetch('/news/' + id, { method: 'DELETE' }).then(function() { loadNews(); });
 }
 
 // ===== CATEGORIES =====
-function loadCategories() {
-  adminFetch('/menu/categories').then(function(r) { return r.json(); }).then(function(cats) {
-    var el = document.getElementById('categoriesList');
+function loadCatégories() {
+  adminFetch('/menu/catégories').then(function(r) { return r.json(); }).then(function(cats) {
+    var el = document.getElementById('catégoriesList');
     el.innerHTML = cats.map(function(c) {
       return '<div class="card"><div class="card-header"><div><span class="card-title">' + esc(c.name) + '</span> ' +
         '<span class="badge badge-section">' + c.section + '</span> ' +
@@ -369,9 +369,9 @@ function loadCategories() {
 }
 
 function loadCategoryFilter() {
-  adminFetch('/menu/categories').then(function(r) { return r.json(); }).then(function(cats) {
+  adminFetch('/menu/catégories').then(function(r) { return r.json(); }).then(function(cats) {
     var el = document.getElementById('menuCategoryFilter');
-    el.innerHTML = '<option value="">Toutes les categories</option>' +
+    el.innerHTML = '<option value="">Toutes les catégories</option>' +
       cats.map(function(c) { return '<option value="' + c.id + '">' + esc(c.name) + ' (' + c.section + ')</option>'; }).join('');
   });
 }
@@ -380,7 +380,7 @@ function openCategoryForm(data) {
   var d = data || {};
   var isEdit = !!d.id;
   document.getElementById('formModal').innerHTML =
-    '<h3>' + (isEdit ? 'Modifier' : 'Nouvelle') + ' categorie</h3>' +
+    '<h3>' + (isEdit ? 'Modifier' : 'Nouvelle') + ' catégorie</h3>' +
     '<div class="form-group"><label>Nom</label><input id="f_catname" value="' + esc(d.name || '') + '"></div>' +
     '<div class="form-group"><label>Section</label><select id="f_catsection"><option value="carte"' + (d.section === 'carte' ? ' selected' : '') + '>Carte</option><option value="traiteur"' + (d.section === 'traiteur' ? ' selected' : '') + '>Traiteur</option></select></div>' +
     '<div class="form-group"><label>Ordre</label><input type="number" id="f_catorder" value="' + (d.sort_order || 0) + '"></div>' +
@@ -390,7 +390,7 @@ function openCategoryForm(data) {
 }
 
 function editCategory(id) {
-  adminFetch('/menu/categories').then(function(r) { return r.json(); }).then(function(cats) {
+  adminFetch('/menu/catégories').then(function(r) { return r.json(); }).then(function(cats) {
     var c = cats.find(function(x) { return x.id === id; });
     if (c) openCategoryForm(c);
   });
@@ -399,14 +399,14 @@ function editCategory(id) {
 function saveCategory(id) {
   var body = { name: document.getElementById('f_catname').value, section: document.getElementById('f_catsection').value, sort_order: parseInt(document.getElementById('f_catorder').value) || 0 };
   var method = id ? 'PUT' : 'POST';
-  var path = id ? '/menu/categories/' + id : '/menu/categories';
+  var path = id ? '/menu/catégories/' + id : '/menu/catégories';
   adminFetch(path, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-    .then(function() { closeForm(); loadCategories(); loadCategoryFilter(); });
+    .then(function() { closeForm(); loadCatégories(); loadCategoryFilter(); });
 }
 
 function deleteCategory(id) {
-  if (!confirm('Supprimer cette categorie et tous ses items ?')) return;
-  adminFetch('/menu/categories/' + id, { method: 'DELETE' }).then(function() { loadCategories(); loadCategoryFilter(); loadItems(); });
+  if (!confirm('Supprimer cette catégorie et tous ses items ?')) return;
+  adminFetch('/menu/catégories/' + id, { method: 'DELETE' }).then(function() { loadCatégories(); loadCategoryFilter(); loadItems(); });
 }
 
 // ===== MENU ITEMS =====
@@ -434,8 +434,8 @@ function loadItems() {
 function openItemForm(data) {
   var d = data || {};
   var isEdit = !!d.id;
-  // Need categories for select
-  adminFetch('/menu/categories').then(function(r) { return r.json(); }).then(function(cats) {
+  // Need catégories for select
+  adminFetch('/menu/catégories').then(function(r) { return r.json(); }).then(function(cats) {
     var catOpts = cats.map(function(c) {
       return '<option value="' + c.id + '"' + (d.category_id == c.id ? ' selected' : '') + '>' + esc(c.name) + ' (' + c.section + ')</option>';
     }).join('');
