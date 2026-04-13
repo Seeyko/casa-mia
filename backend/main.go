@@ -94,6 +94,13 @@ func main() {
 		fmt.Fprintf(w, `{"status":"ok","service":"casamia-api"}`)
 	})
 
+	// Dynamic config.js for frontend
+	r.Get("/js/config.js", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/javascript")
+		w.Header().Set("Cache-Control", "no-cache")
+		fmt.Fprintf(w, `window.APP_CONFIG = { API_URL: "", ADMIN_SECRET_PATH: "%s" };`, adminSecretPath)
+	})
+
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/health", handlers.HealthCheck)
 
@@ -139,11 +146,50 @@ func main() {
 		})
 	})
 
-	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, `{"error":"not_found","path":"%s"}`, r.URL.Path)
-	})
+	// Serve frontend static files if directory exists
+	staticDir := os.Getenv("STATIC_DIR")
+	if staticDir == "" {
+		staticDir = "./static"
+	}
+
+	if info, err := os.Stat(staticDir); err == nil && info.IsDir() {
+		log.Printf("Serving frontend from: %s", staticDir)
+		fs := http.FileServer(http.Dir(staticDir))
+
+		// SPA routes — serve specific HTML files
+		spaRoutes := map[string]string{
+			"/menu":     "menu.html",
+			"/histoire": "histoire.html",
+		}
+		// Admin route
+		adminRoute := "/" + adminSecretPath
+		spaRoutes[adminRoute] = "admin.html"
+
+		for route, file := range spaRoutes {
+			filePath := staticDir + "/" + file
+			r.Get(route, func(w http.ResponseWriter, r *http.Request) {
+				http.ServeFile(w, r, filePath)
+			})
+		}
+
+		// Catch-all: try static file, fallback to index.html
+		r.NotFound(func(w http.ResponseWriter, req *http.Request) {
+			// Try serving the static file directly
+			path := staticDir + req.URL.Path
+			if fInfo, fErr := os.Stat(path); fErr == nil && !fInfo.IsDir() {
+				fs.ServeHTTP(w, req)
+				return
+			}
+			// Fallback to index.html for SPA
+			http.ServeFile(w, req, staticDir+"/index.html")
+		})
+	} else {
+		r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintf(w, `{"error":"not_found","path":"%s"}`, r.URL.Path)
+		})
+	}
 
 	log.Printf("===========================================")
 	log.Printf("CasaMia API starting on port %s", port)
