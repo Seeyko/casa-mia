@@ -5,75 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin — CasaMia</title>
   <link rel="icon" type="image/png" href="images/logo-casamia.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Albert+Sans:wght@400;500;600;700&display=swap">
   <style>
     :root {
-      --bg: #0F0D0B; --bg2: #1A1714; --bg3: #211E1A; --text: #F5F0E8;
-      --text2: #B8AFA3; --gold: #D4A853; --gold-h: #E8C97A; --border: #2E2A25;
-      --red: #E53935; --green: #4CAF50; --radius: 10px;
+      --bg:  oklch(15.5% 0.012 60);
+      --bg2: oklch(18.5% 0.014 58);
+      --bg3: oklch(22%   0.014 55);
+      --text:  oklch(94% 0.018 80);
+      --text2: oklch(70% 0.020 70);
+      --gold:  oklch(76% 0.118 80);
+      --gold-h: oklch(84% 0.110 85);
+      --border: oklch(100% 0 0 / .10);
+      --red: oklch(60% 0.170 28);
+      --green: oklch(68% 0.140 145);
+      --radius: 4px;
+      --f-display: 'Gilda Display', serif;
+      --f-body: 'Albert Sans', system-ui, sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); }
+    body { font-family: var(--f-body); background: var(--bg); color: var(--text); font-size: 16px; -webkit-font-smoothing: antialiased; }
     a { color: var(--gold); text-decoration: none; }
+    h1, h2, h3 { font-family: var(--f-display); font-weight: 400; letter-spacing: -0.01em; }
 
     /* Layout */
-    .app { max-width: 1000px; margin: 0 auto; padding: 20px; }
-    .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
-    .header h1 { font-size: 1.3rem; color: var(--gold); }
-    .logout { padding: 6px 16px; border: 1px solid var(--border); border-radius: 99px; color: var(--text2); cursor: pointer; font-size: .85rem; background: none; }
+    .app { max-width: 1100px; margin: 0 auto; padding: 24px clamp(16px, 3vw, 32px); }
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 20px 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
+    .header h1 { font-size: 1.6rem; color: var(--text); }
+    .logout { padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text2); cursor: pointer; font-size: .8125rem; background: none; letter-spacing: 0.03em; transition: color .2s, border-color .2s; }
     .logout:hover { border-color: var(--red); color: var(--red); }
 
     /* Login */
-    .login { max-width: 360px; margin: 100px auto; text-align: center; }
-    .login h2 { margin-bottom: 24px; color: var(--gold); }
-    .login input { width: 100%; padding: 12px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: .95rem; margin-bottom: 12px; }
-    .login button { width: 100%; padding: 12px; background: var(--gold); color: var(--bg); border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; font-size: .95rem; }
+    .login { max-width: 380px; margin: 12vh auto; padding: 40px; border: 1px solid var(--border); background: var(--bg2); border-radius: 8px; }
+    .login h2 { margin-bottom: 24px; font-size: 1.8rem; text-align: center; }
+    .login input { width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: .9rem; margin-bottom: 10px; font-family: inherit; }
+    .login input:focus { outline: none; border-color: var(--gold); }
+    .login button { width: 100%; padding: 12px; background: var(--gold); color: var(--bg); border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; font-size: .875rem; letter-spacing: 0.04em; font-family: inherit; }
     .login button:hover { background: var(--gold-h); }
-    .error { color: var(--red); font-size: .85rem; margin-top: 8px; }
+    .error { color: var(--red); font-size: .8125rem; margin-top: 8px; }
 
-    /* Tabs */
-    .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg2); border-radius: 99px; padding: 4px; }
-    .tab { padding: 10px 24px; border-radius: 99px; cursor: pointer; font-size: .9rem; color: var(--text2); font-weight: 500; border: none; background: none; }
+    /* Tabs — éditoriaux (pas pill gold bg) */
+    .tabs { display: flex; gap: 24px; margin-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .tab { padding: 12px 0; cursor: pointer; font-size: .9rem; color: var(--text2); font-weight: 500; border: none; background: none; position: relative; letter-spacing: 0.01em; font-family: inherit; }
     .tab:hover { color: var(--text); }
-    .tab.active { background: var(--gold); color: var(--bg); }
+    .tab.active { color: var(--text); }
+    .tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--gold); }
     .panel { display: none; }
     .panel.active { display: block; }
 
     /* Cards */
-    .card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; }
-    .card-title { font-weight: 600; }
-    .card-meta { color: var(--text2); font-size: .8rem; }
-    .card-actions { display: flex; gap: 8px; }
-    .card-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 12px; }
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 16px 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 16px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 16px; }
+    .card-title { font-weight: 600; font-size: .95rem; }
+    .card-meta { color: var(--text2); font-size: .8125rem; margin-top: 2px; }
+    .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .card-img { width: 56px; height: 56px; object-fit: cover; border-radius: var(--radius); flex-shrink: 0; }
 
     /* Buttons */
-    .btn { padding: 8px 16px; border-radius: var(--radius); font-size: .85rem; cursor: pointer; border: none; font-weight: 500; }
-    .btn-primary { background: var(--gold); color: var(--bg); }
-    .btn-primary:hover { background: var(--gold-h); }
+    .btn { padding: 10px 16px; border-radius: var(--radius); font-size: .8125rem; cursor: pointer; border: 1px solid transparent; font-weight: 600; letter-spacing: 0.03em; font-family: inherit; transition: background .2s, color .2s, border-color .2s; }
+    .btn-primary { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+    .btn-primary:hover { background: var(--gold-h); border-color: var(--gold-h); }
     .btn-danger { background: none; color: var(--red); border: 1px solid var(--red); }
-    .btn-danger:hover { background: var(--red); color: white; }
-    .btn-sm { padding: 4px 12px; font-size: .8rem; }
-    .btn-add { margin-bottom: 16px; }
+    .btn-danger:hover { background: var(--red); color: var(--text); }
+    .btn-sm { padding: 6px 12px; font-size: .75rem; }
+    .btn-add { margin-bottom: 20px; }
 
     /* Forms */
-    .form-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; }
-    .form-overlay.active { display: flex; align-items: center; justify-content: center; }
-    .form-modal { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
-    .form-modal h3 { margin-bottom: 16px; color: var(--gold); }
+    .form-overlay { display: none; position: fixed; inset: 0; background: oklch(0% 0 0 / .6); z-index: 100; }
+    .form-overlay.active { display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .form-modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 28px; width: 100%; max-width: 520px; max-height: 85vh; overflow-y: auto; }
+    .form-modal h3 { margin-bottom: 20px; font-size: 1.3rem; color: var(--text); }
     .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: .85rem; color: var(--text2); margin-bottom: 4px; }
+    .form-group label { display: block; font-size: .75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text2); margin-bottom: 6px; }
     .form-group input, .form-group textarea, .form-group select {
       width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
-      border-radius: 6px; color: var(--text); font-size: .9rem; font-family: inherit;
+      border-radius: var(--radius); color: var(--text); font-size: .9rem; font-family: inherit;
     }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
-    .form-cancel { padding: 8px 16px; background: none; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text2); cursor: pointer; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--gold); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+    .form-cancel { padding: 10px 16px; background: none; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text2); cursor: pointer; font-family: inherit; }
+    .form-cancel:hover { color: var(--text); border-color: var(--text2); }
 
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: .7rem; font-weight: 600; }
-    .badge-green { background: rgba(76,175,80,.15); color: var(--green); }
-    .badge-gray { background: rgba(255,255,255,.08); color: var(--text2); }
-    .badge-section { background: rgba(212,168,83,.15); color: var(--gold); }
+    /* Badges — rectangulaires, pas pill */
+    .badge { display: inline-block; padding: 3px 8px; border-radius: var(--radius); font-size: .6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+    .badge-green { background: oklch(68% 0.140 145 / .15); color: var(--green); border: 1px solid oklch(68% 0.140 145 / .3); }
+    .badge-gray { background: oklch(100% 0 0 / .05); color: var(--text2); border: 1px solid var(--border); }
+    .badge-section { background: oklch(76% 0.118 80 / .12); color: var(--gold); border: 1px solid oklch(76% 0.118 80 / .3); }
+
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   </style>
 </head>
 <body>

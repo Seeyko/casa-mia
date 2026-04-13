@@ -3,61 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notre Histoire — CasaMia Pizzeria Artisanale Sicilienne</title>
-  <meta name="description" content="Découvrez l'histoire de CasaMia : Tony et Cindy, un couple passionné, une cuisine sicilienne authentique au cœur du Vaucluse. Distingués Tables et Auberges de France.">
+  <title>Notre Histoire — CasaMia Pizzeria artisanale sicilienne</title>
+  <meta name="description" content="Tony et Cindy, un couple passionné, une cuisine sicilienne authentique au cœur du Vaucluse. Distingués Tables et Auberges de France.">
   <meta property="og:title" content="Notre Histoire — CasaMia Pizzeria">
   <meta property="og:description" content="De la Sicile au Vaucluse, découvrez l'histoire de Tony et Cindy, fondateurs de CasaMia.">
   <meta property="og:image" content="images/gerants-tables-auberges.jpg">
   <meta property="og:type" content="restaurant">
   <meta property="og:locale" content="fr_FR">
   <link rel="icon" type="image/png" href="images/logo-casamia.png">
-  <link rel="stylesheet" href="css/style.css?v=3">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Restaurant",
-    "name": "CasaMia Pizzeria",
-    "image": "images/gerants-tables-auberges.jpg",
-    "description": "Pizzeria artisanale sicilienne fondée par Tony et Cindy à Entraigues-sur-la-Sorgue et Althen-des-Paluds. Produits importés de Sicile.",
-    "servesCuisine": ["Italian", "Pizza", "Sicilian"],
-    "priceRange": "$$",
-    "address": [
-      {
-        "@type": "PostalAddress",
-        "addressLocality": "Entraigues-sur-la-Sorgue",
-        "postalCode": "84320",
-        "streetAddress": "51 Rue Laurent Bertrand",
-        "addressCountry": "FR"
-      },
-      {
-        "@type": "PostalAddress",
-        "addressLocality": "Althen-des-Paluds",
-        "postalCode": "84210",
-        "streetAddress": "254 Avenue Ernest Perrin",
-        "addressCountry": "FR"
-      }
-    ],
-    "telephone": "+33645794930",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "298",
-      "bestRating": "5"
-    }
-  }
-  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
 
   <!-- Header -->
   <header class="header" id="header">
     <div class="header__inner">
-      <a href="/" class="header__logo"><img src="images/logo-casamia.png" alt="CasaMia" style="height:44px;width:auto;"></a>
+      <a href="/" class="header__brand" aria-label="CasaMia — Accueil">
+        <img src="images/logo-casamia.png" alt="">
+      </a>
       <nav class="nav" id="nav" aria-label="Navigation principale">
         <a href="/" class="nav__link">Accueil</a>
         <a href="/menu" class="nav__link">La Carte</a>
         <a href="/histoire" class="nav__link nav__link--active">Notre Histoire</a>
-        <a href="/#nos-adresses" class="nav__link">Contact</a>
+        <a href="/#nos-adresses" class="nav__link">Nos Adresses</a>
       </nav>
       <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
         <span class="hamburger__line"></span>
@@ -68,105 +38,132 @@
   </header>
   <div class="nav-overlay" id="navOverlay"></div>
 
-  <!-- Hero -->
+  <!-- Hero éditorial -->
   <section class="hero hero--short">
     <div class="hero__bg" style="background-image: url('images/gerants-tables-auberges.jpg');"></div>
-    <div class="hero__overlay"></div>
-    <div class="hero__content">
-      <h1 class="hero__title">Notre Histoire</h1>
-      <p class="hero__subtitle">De la Sicile au Vaucluse &mdash; une histoire de passion</p>
+    <div class="hero__veil"></div>
+    <div class="hero__inner entrance">
+      <span class="hero__kicker">Notre Histoire</span>
+      <h1 class="hero__title">De la Sicile <em>au Vaucluse</em>, une histoire de passion.</h1>
     </div>
   </section>
 
-  <!-- Story Section 1: Tony & Cindy -->
+  <!-- Story 1 — Tony & Cindy -->
   <section class="section">
     <div class="container">
-      <div class="story-section fade-in">
-        <div class="story-section__image">
-          <img src="images/gerants-tables-auberges.jpg" alt="Tony et Cindy, fondateurs de CasaMia, distingues Tables et Auberges de France" loading="lazy">
+      <div class="story">
+        <div class="story__fig">
+          <img src="images/gerants-tables-auberges.jpg" alt="Tony et Cindy, fondateurs de CasaMia, distingués Tables et Auberges de France" loading="lazy">
         </div>
-        <div class="story-section__text">
-          <h2>Tony &amp; Cindy</h2>
-          <p>Tony est né en Sicile, bercé par les saveurs de sa terre natale. Formé aux traditions culinaires siciliennes, il a grandi entre les marchés de Palerme, les oliveraies et les recettes transmises de génération en génération.</p>
-          <p>Avec Cindy, ils partagent une même vision : offrir une cuisine italienne authentique, sans compromis sur la qualité des produits. Ensemble, ils ont créé CasaMia pour partager cette passion avec le Vaucluse.</p>
-          <div class="story-recognition">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-            Distingués Tables &amp; Auberges de France
-          </div>
+        <div class="story__body">
+          <span class="eyebrow">Les fondateurs</span>
+          <h2>Tony &amp; Cindy.</h2>
+          <p>Tony est né en Sicile, bercé par les saveurs de sa terre natale. Formé aux traditions culinaires siciliennes, il a grandi entre les marchés de Palerme, les oliveraies, et les recettes transmises de génération en génération.</p>
+          <p>Avec Cindy, ils partagent la même vision : une cuisine italienne authentique, sans compromis sur la qualité des produits. Ensemble, ils ont créé CasaMia pour partager cette passion avec le Vaucluse.</p>
+          <span class="story__tag">Distingués Tables &amp; Auberges de France</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Story Section 2: CasaMia — Chez moi (reversed) -->
+  <!-- Story 2 — Chez moi -->
   <section class="section section--alt">
     <div class="container">
-      <div class="story-section story-section--reversed fade-in">
-        <div class="story-section__text">
-          <h2>CasaMia &mdash; Chez moi</h2>
-          <p>CasaMia, c'est « chez moi » en italien. Plus qu'un nom, c'est une promesse : celle de vous accueillir comme à la maison, dans la chaleur et la générosité de la tradition sicilienne.</p>
-          <p>Chaque produit est sélectionné avec soin. La farine de blé dur, les tomates San Marzano, l'huile d'olive extra-vierge, la charcuterie artisanale... Tout est importé directement de Sicile pour garantir un goût inimitable.</p>
+      <div class="story story--reverse">
+        <div class="story__fig">
+          <img src="images/planche-charcuterie-premium.jpg" alt="Planche de charcuterie artisanale italienne CasaMia" loading="lazy">
+        </div>
+        <div class="story__body">
+          <span class="eyebrow">CasaMia</span>
+          <h2>«&nbsp;Chez moi&nbsp;», en italien.</h2>
+          <p>Plus qu'un nom, c'est une promesse : vous accueillir comme à la maison, dans la chaleur et la générosité de la tradition sicilienne.</p>
+          <p>Chaque produit est choisi avec soin. La farine de blé dur, les tomates San Marzano, l'huile d'olive extra-vierge, la charcuterie artisanale — tout est importé directement de Sicile.</p>
           <p>De la pâte pétrie à la main aux desserts faits maison, chaque assiette raconte un morceau de notre histoire.</p>
         </div>
-        <div class="story-section__image">
-          <img src="images/planche-charcuterie.jpg" alt="Planche de charcuterie artisanale italienne CasaMia" loading="lazy">
-        </div>
       </div>
     </div>
   </section>
 
-  <!-- Values Section -->
+  <!-- Principes (remplace value cards) -->
   <section class="section">
-    <div class="container">
-      <div class="text-center fade-in">
-        <h2 class="section__title">Nos valeurs</h2>
-        <hr class="decorative-line">
-      </div>
-      <div class="card-grid" style="margin-top:40px;">
-        <div class="value-card fade-in">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 16px;display:block;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-          <h3>Authenticité</h3>
-          <p>Un chef né en Sicile, des recettes transmises de génération en génération, des produits importés directement d'Italie. Chez CasaMia, rien n'est approximatif.</p>
+    <div class="container container--narrow">
+      <header class="section__head">
+        <div>
+          <span class="eyebrow">Nos principes</span>
+          <h2 class="section__title">Trois lignes que l'on ne franchit pas.</h2>
         </div>
-        <div class="value-card fade-in">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 16px;display:block;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <h3>Qualité sans compromis</h3>
-          <p>Farine de blé dur sicilienne, tomates San Marzano, mozzarella Fior di Latte, huile d'olive extra-vierge... Chaque ingrédient est choisi pour son excellence.</p>
-        </div>
-        <div class="value-card fade-in">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 16px;display:block;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <h3>Esprit de famille</h3>
-          <p>CasaMia, c'est avant tout une famille. Tony et Cindy vous accueillent avec le sourire, la générosité et la convivialité qui font l'âme de la cuisine italienne.</p>
-        </div>
+      </header>
+
+      <div class="principles">
+        <article class="principle">
+          <div class="principle__num">01</div>
+          <div>
+            <h3 class="principle__title">Authenticité</h3>
+            <p class="principle__text">Un chef né en Sicile, des recettes transmises de génération en génération, des produits importés directement d'Italie. Ici, rien n'est approximatif — et surtout pas le goût.</p>
+          </div>
+        </article>
+
+        <article class="principle">
+          <div class="principle__num">02</div>
+          <div>
+            <h3 class="principle__title">Qualité sans compromis</h3>
+            <p class="principle__text">Farine de blé dur sicilienne, tomates San Marzano, mozzarella Fior di Latte, huile d'olive extra-vierge. Chaque ingrédient est choisi pour son excellence — jamais pour son prix.</p>
+          </div>
+        </article>
+
+        <article class="principle">
+          <div class="principle__num">03</div>
+          <div>
+            <h3 class="principle__title">Esprit de famille</h3>
+            <p class="principle__text">CasaMia, avant tout, c'est une famille. Tony et Cindy vous accueillent avec le sourire, la générosité et la convivialité qui font l'âme de la cuisine italienne.</p>
+          </div>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- Photo Gallery -->
+  <!-- Galerie nos créations -->
   <section class="section section--alt">
     <div class="container">
-      <div class="text-center fade-in">
-        <h2 class="section__title">Nos créations</h2>
-        <hr class="decorative-line">
-      </div>
-      <div class="gallery-grid" style="margin-top:32px;">
-        <div class="fade-in"><img src="images/pizza-diavola.jpg" alt="Pizza Diavola CasaMia" loading="lazy"></div>
-        <div class="fade-in"><img src="images/pizza-jambon-cru-pesto.jpg" alt="Pizza jambon cru pesto CasaMia" loading="lazy"></div>
-        <div class="fade-in"><img src="images/pizza-bologne-mortadelle.jpg" alt="Pizza bologne mortadelle CasaMia" loading="lazy"></div>
+      <header class="section__head">
+        <div>
+          <span class="eyebrow">Nos créations</span>
+          <h2 class="section__title">Ce que l'on sort du four.</h2>
+        </div>
+        <a class="btn btn--link" href="/menu">Toute la carte &rarr;</a>
+      </header>
+      <div class="gallery">
+        <div class="gallery__item gallery__item--half gallery__item--tall">
+          <img src="images/hero-calzone-four.jpg" alt="Calzone doré dans le four en flammes" loading="lazy">
+        </div>
+        <div class="gallery__item gallery__item--half">
+          <img src="images/hero-pizza-artichauts-four.jpg" alt="Pizza artichauts devant le four" loading="lazy">
+        </div>
+        <div class="gallery__item gallery__item--half">
+          <img src="images/hero-pizza-champignons-jambon-four.jpg" alt="Pizza champignons jambon devant le four" loading="lazy">
+        </div>
+        <div class="gallery__item gallery__item--third">
+          <img src="images/pizza-tartufo.jpg" alt="Pizza Tartufo" loading="lazy">
+        </div>
+        <div class="gallery__item gallery__item--third">
+          <img src="images/pizza-burrata.jpg" alt="Pizza Burrata" loading="lazy">
+        </div>
+        <div class="gallery__item gallery__item--third">
+          <img src="images/pizza-bresaola.jpg" alt="Pizza Bresaola" loading="lazy">
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="cta-section">
-    <div class="container">
-      <div class="fade-in" style="max-width:600px;margin:0 auto;">
-        <h2 style="font-family:var(--font-heading);font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:16px;">Venez nous rendre visite</h2>
-        <p style="font-size:1.05rem;line-height:1.7;margin-bottom:32px;">Poussez la porte de CasaMia et laissez-vous transporter en Sicile. Tony et Cindy vous attendent avec le sourire.</p>
-        <div class="btn-group" style="justify-content:center;">
-          <a href="/#nos-adresses" class="btn btn--gold">Nos adresses</a>
-          <a href="/menu" class="btn btn--outline" style="border-color:rgba(245,240,232,.4);color:var(--text-primary);">Découvrir la carte</a>
-        </div>
+  <!-- Invitation finale -->
+  <section class="section">
+    <div class="container container--narrow" style="text-align:center;">
+      <span class="eyebrow eyebrow--plain">Poussez la porte</span>
+      <h2 class="section__title" style="margin: var(--s-sm) auto var(--s-md); max-width: 20ch;">Venez goûter. On vous attend.</h2>
+      <p style="max-width: 48ch; margin: 0 auto var(--s-lg); color: var(--ink-2);">Tony et Cindy vous accueillent dans nos deux pizzerias du Vaucluse, avec la chaleur sicilienne et la même exigence.</p>
+      <div class="btn-group" style="justify-content:center;">
+        <a href="/#nos-adresses" class="btn btn--primary">Voir nos adresses</a>
+        <a href="/menu" class="btn btn--ghost">Découvrir la carte</a>
       </div>
     </div>
   </section>
@@ -175,31 +172,33 @@
   <footer class="footer">
     <div class="container">
       <div class="footer__grid">
-        <div>
-          <img src="images/logo-casamia.png" alt="CasaMia" style="height:50px;width:auto;margin-bottom:12px;">
-          <h3 class="footer__title">CasaMia</h3>
-          <p class="footer__text">Pizzeria artisanale, traiteur italien et épicerie fine. Par un vrai chef sicilien, avec des produits importés de Sicile.</p>
+        <div class="footer__brand">
+          <img src="images/logo-casamia.png" alt="CasaMia">
+          <p>Pizzeria artisanale, traiteur italien et épicerie fine. Par un vrai chef sicilien.</p>
         </div>
         <div>
-          <h3 class="footer__title">Navigation</h3>
-          <a href="/" class="footer__link">Accueil</a>
-          <a href="/menu" class="footer__link">La Carte</a>
-          <a href="/histoire" class="footer__link">Notre Histoire</a>
-          <a href="/#nos-adresses" class="footer__link">Nos Adresses</a>
+          <div class="footer__title">Plan du site</div>
+          <div class="footer__list">
+            <a href="/" class="footer__link">Accueil</a>
+            <a href="/menu" class="footer__link">La Carte</a>
+            <a href="/histoire" class="footer__link">Notre Histoire</a>
+            <a href="/#nos-adresses" class="footer__link">Nos adresses</a>
+          </div>
         </div>
         <div>
-          <h3 class="footer__title">Entraigues-sur-la-Sorgue</h3>
-          <p class="footer__text">51 Rue Laurent Bertrand, 84320</p>
-          <a href="tel:0645794930" class="footer__link" style="color:var(--gold);font-weight:600;">06 45 79 49 30</a>
+          <div class="footer__title">Entraigues-sur-la-Sorgue</div>
+          <p class="addr__street">51 Rue Laurent Bertrand<br>84320</p>
+          <a href="tel:0645794930" class="footer__phone">06 45 79 49 30</a>
         </div>
         <div>
-          <h3 class="footer__title">Althen-des-Paluds</h3>
-          <p class="footer__text">254 Avenue Ernest Perrin, 84210</p>
-          <a href="tel:0490361633" class="footer__link" style="color:var(--gold);font-weight:600;">04 90 36 16 33</a>
+          <div class="footer__title">Althen-des-Paluds</div>
+          <p class="addr__street">254 Avenue Ernest Perrin<br>84210</p>
+          <a href="tel:0490361633" class="footer__phone">04 90 36 16 33</a>
         </div>
       </div>
       <div class="footer__bottom">
-        <p>&copy; 2026 CasaMia Pizzeria &mdash; Entraigues-sur-la-Sorgue &amp; Althen-des-Paluds. Tous droits réservés.</p>
+        <span>© 2026 CasaMia Pizzeria</span>
+        <span>Entraigues &amp; Althen-des-Paluds · Vaucluse</span>
       </div>
     </div>
   </footer>

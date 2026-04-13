@@ -5,8 +5,22 @@
 
   // ===== INIT =====
   document.addEventListener('DOMContentLoaded', function() {
+    document.documentElement.classList.add('js-ready');
     initNav();
     initFadeIn();
+    // Fallback : 1.5s après load, dévoile tous les reveal dans la partie supérieure,
+    // et 3s après (ou au premier scroll) dévoile tout pour éviter contenu caché en cas de bug IO.
+    setTimeout(function() {
+      document.querySelectorAll('.reveal:not(.is-visible)').forEach(function(el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight * 1.5) el.classList.add('is-visible');
+      });
+    }, 1500);
+    setTimeout(function() {
+      document.querySelectorAll('.reveal:not(.is-visible)').forEach(function(el) {
+        el.classList.add('is-visible');
+      });
+    }, 3500);
 
     // Page-specific init
     if (document.getElementById('statusBadges')) {
@@ -54,22 +68,19 @@
     }, { passive: true });
   }
 
-  // ===== FADE IN =====
-  var fadeObserver = new IntersectionObserver(function(entries) {
+  // ===== SCROLL REVEAL =====
+  var revealObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
-        var el = entry.target;
-        el.classList.add('visible');
-        fadeObserver.unobserve(el);
-        // Remove fade-in class after transition to prevent any re-trigger
-        setTimeout(function() { el.classList.remove('fade-in'); }, 700);
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
   function initFadeIn() {
-    document.querySelectorAll('.fade-in:not(.visible)').forEach(function(el) {
-      fadeObserver.observe(el);
+    document.querySelectorAll('.reveal:not(.is-visible)').forEach(function(el) {
+      revealObserver.observe(el);
     });
   }
 
@@ -80,14 +91,18 @@
       .then(function(statuses) {
         var container = document.getElementById('statusBadges');
         if (!container) return;
-        container.innerHTML = statuses.map(function(s) {
-          var cls = s.is_open ? 'status-badge--open' : 'status-badge--closed';
+        container.innerHTML = statuses.map(function(s, i) {
+          var cls = s.is_open ? 'status--open' : 'status--closed';
           var label = s.is_open ? 'Ouvert' : 'Fermé';
-          return '<div class="status-badge ' + cls + '">' +
-            '<span class="status-badge__dot"></span>' +
-            '<span class="status-badge__label"><strong>' + escapeHtml(s.name) + '</strong> — ' + label + '</span>' +
-            '<span class="status-badge__info">' + escapeHtml(s.next_change) + '</span>' +
-            '</div>';
+          var sep = i > 0 ? '<span class="hero__meta-sep" aria-hidden="true">·</span>' : '';
+          return sep +
+            '<span class="status ' + cls + '">' +
+              '<span class="status__dot" aria-hidden="true"></span>' +
+              '<span class="status__label">' + escapeHtml(s.name) + '</span>' +
+              '<span class="status__note">— ' + label +
+                (s.next_change ? ' · ' + escapeHtml(s.next_change) : '') +
+              '</span>' +
+            '</span>';
         }).join('');
       })
       .catch(function() {});
@@ -106,15 +121,16 @@
         }
         section.style.display = '';
         container.innerHTML = news.map(function(n) {
-          var img = n.image_path ? '<img class="news-card__img" src="' + API + '/api/images/' + escapeHtml(n.image_path) + '" alt="" loading="lazy">' : '';
-          var date = new Date(n.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-          var hasText = n.title || n.content;
-          var body = hasText ? '<div class="news-card__body">' +
-            (n.title ? '<h3 class="news-card__title">' + escapeHtml(n.title) + '</h3>' : '') +
-            (n.content ? '<p class="news-card__text">' + escapeHtml(n.content) + '</p>' : '') +
-            '<p class="news-card__date">' + date + '</p>' +
-            '</div>' : '';
-          return '<div class="news-card fade-in">' + img + body + '</div>';
+          var img = n.image_path
+            ? '<figure class="news__figure"><img src="' + API + '/api/images/' + escapeHtml(n.image_path) + '" alt="" loading="lazy"></figure>'
+            : '<figure class="news__figure" aria-hidden="true"></figure>';
+          var date = new Date(n.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
+          var body = '<div class="news__body reveal">' +
+            '<div class="news__date">' + date + '</div>' +
+            (n.title ? '<h3 class="news__title">' + escapeHtml(n.title) + '</h3>' : '') +
+            (n.content ? '<p class="news__text">' + escapeHtml(n.content) + '</p>' : '') +
+            '</div>';
+          return '<article class="news__item">' + img + body + '</article>';
         }).join('');
         initFadeIn();
       })
@@ -128,13 +144,13 @@
       .then(function(locations) {
         var container = document.getElementById('locationsGrid');
         if (!container) return;
+        var todayIdx = (new Date().getDay() + 6) % 7;
         container.innerHTML = locations.map(function(loc) {
-          var hours = formatHours(loc.opening_hours);
-          return '<div class="location-card fade-in">' +
-            '<h3 class="location-card__name">' + escapeHtml(loc.name) + '</h3>' +
-            '<div class="location-card__detail"><span class="location-card__icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span>' + escapeHtml(loc.address) + '</span></div>' +
-            '<div class="location-card__detail"><span class="location-card__icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><span>' + hours + '</span></div>' +
-            '<a href="tel:' + loc.phone.replace(/\s/g, '') + '" class="location-card__phone"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ' + escapeHtml(loc.phone) + '</a>' +
+          return '<div class="addr reveal">' +
+            '<h3 class="addr__name">' + escapeHtml(loc.name) + '</h3>' +
+            '<p class="addr__street">' + escapeHtml(loc.address) + '</p>' +
+            '<a href="tel:' + loc.phone.replace(/\s/g, '') + '" class="addr__phone">' + escapeHtml(loc.phone) + '</a>' +
+            renderHours(loc.opening_hours, todayIdx) +
             '</div>';
         }).join('');
         initFadeIn();
@@ -142,23 +158,24 @@
       .catch(function() {});
   }
 
-  function formatHours(hoursObj) {
+  function renderHours(hoursObj, todayIdx) {
     if (typeof hoursObj === 'string') {
-      try { hoursObj = JSON.parse(hoursObj); } catch(e) { return 'Horaires indisponibles'; }
+      try { hoursObj = JSON.parse(hoursObj); } catch(e) { return ''; }
     }
     var days = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
-    var lines = [];
-    days.forEach(function(day) {
+    var labels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+    var rows = days.map(function(day, i) {
       var dh = hoursObj[day];
-      var cap = day.charAt(0).toUpperCase() + day.slice(1);
-      if (!dh || !dh.slots || !dh.slots.length) {
-        lines.push(cap + ' : Fermé');
-      } else {
-        var times = dh.slots.map(function(s) { return s.open + '-' + s.close; }).join(' / ');
-        lines.push(cap + ' : ' + times);
-      }
-    });
-    return lines.join('<br>');
+      var todayCls = i === todayIdx ? ' hours__row--today' : '';
+      var closed = !dh || !dh.slots || !dh.slots.length;
+      var valueCls = closed ? ' hours__value--closed' : '';
+      var value = closed
+        ? 'Fermé'
+        : dh.slots.map(function(s) { return s.open + ' – ' + s.close; }).join(' · ');
+      return '<div class="hours__day' + todayCls + '">' + labels[i] + '</div>' +
+             '<div class="hours__value' + valueCls + todayCls + '">' + value + '</div>';
+    }).join('');
+    return '<div class="hours">' + rows + '</div>';
   }
 
   // ===== MENU =====
@@ -182,46 +199,70 @@
         var html = '';
 
         if (section === 'carte') {
-          html += '<div class="menu-notice">Toutes nos pizzas sont élaborées à base de produits frais en provenance d\'Italie, avec une mozzarella Fior di Latte, une pâte maison à haute hydratation et un temps de pousse de 48h minimum.</div>';
+          html += '<p class="menu-notice">Pizzas pétries à la main, pousse 48 h, mozzarella Fior di Latte, ingrédients importés de Sicile. Pâte disponible sans gluten sur demande.</p>';
         }
 
         if (section === 'traiteur') {
-          html += '<div class="traiteur-note"><p><strong>Service traiteur</strong> — Sur commande, minimum 3 jours à l\'avance.<br>Minimum 6 personnes. Livraison possible (renseignez-vous en magasin).</p></div>';
+          html += '<p class="menu-notice"><strong>Service traiteur</strong> — sur commande, 3 jours à l\'avance, à partir de 6 personnes. Livraison possible, à demander en magasin.</p>';
         }
 
-        data.categories.forEach(function(cat) {
-          html += '<div class="menu-category">';
-          html += '<h2 class="menu-category__title">' + escapeHtml(cat.name) + '</h2>';
-          html += '<hr class="decorative-line" style="margin-left:0;">';
-          html += '<div class="menu-grid">';
+        data.categories.forEach(function(cat, catIdx) {
+          var idxStr = String(catIdx + 1).padStart(2, '0');
+          var isTraiteur = section === 'traiteur';
+          html += '<section class="' + (isTraiteur ? 'traiteur-group' : 'menu-category') + '">';
+          html += '<header class="' + (isTraiteur ? 'traiteur-group__head' : 'menu-category__head') + '">';
+          html += '<h2 class="' + (isTraiteur ? 'traiteur-group__name' : 'menu-category__name') + '">' + escapeHtml(cat.name) + '</h2>';
+          html += '<span class="' + (isTraiteur ? 'traiteur-group__count' : 'menu-category__index') + '">' + idxStr + ' — ' + cat.items.length + (cat.items.length > 1 ? ' créations' : ' création') + '</span>';
+          html += '</header>';
 
-          cat.items.forEach(function(item) {
-            var highlightClass = item.badge === '★' ? ' menu-item--highlight' : '';
-            html += '<div class="menu-item' + highlightClass + '">';
-
-            if (item.image_path) {
-              html += '<img class="menu-item__img" src="' + API + '/api/images/' + escapeHtml(item.image_path) + '" alt="" loading="lazy">';
-            }
-
-            html += '<div class="menu-item__header">';
-            html += '<h3>' + escapeHtml(item.name);
-            if (item.badge === 'NEW') html += '<span class="badge-new">NEW</span>';
-            if (item.badge === '★') html += '<span class="badge-star"> ★</span>';
-            html += '</h3>';
-            if (item.price) html += '<span class="menu-item__price">' + escapeHtml(item.price) + '</span>';
+          if (isTraiteur) {
+            html += '<div class="traiteur-grid">';
+            cat.items.forEach(function(item) {
+              html += '<article class="traiteur-item">';
+              if (item.image_path) {
+                html += '<div class="traiteur-item__fig"><img src="' + API + '/api/images/' + escapeHtml(item.image_path) + '" alt="" loading="lazy"></div>';
+              } else {
+                html += '<div class="traiteur-item__fig traiteur-item__fig--ph" aria-hidden="true">' + itemIcon(cat.name, item.name) + '</div>';
+              }
+              html += '<div class="traiteur-item__row">';
+              html += '<h3 class="traiteur-item__name">' + escapeHtml(item.name);
+              if (item.badge === 'NEW') html += ' <span class="menu-badge">Nouveau</span>';
+              if (item.badge === '★') html += ' <span class="menu-badge menu-badge--star">★</span>';
+              html += '</h3>';
+              if (item.price) html += '<span class="traiteur-item__price price">' + escapeHtml(item.price) + '</span>';
+              html += '</div>';
+              if (item.description) html += '<p class="traiteur-item__desc">' + escapeHtml(item.description) + '</p>';
+              html += '</article>';
+            });
             html += '</div>';
-
-            if (item.description) html += '<p>' + escapeHtml(item.description) + '</p>';
-            if (item.note) html += '<p class="menu-item__note">' + escapeHtml(item.note) + '</p>';
-
+          } else {
+            html += '<div class="menu-list">';
+            cat.items.forEach(function(item) {
+              html += '<article class="menu-item">';
+              if (item.image_path) {
+                html += '<img class="menu-item__img" src="' + API + '/api/images/' + escapeHtml(item.image_path) + '" alt="" loading="lazy">';
+              } else {
+                html += '<span class="menu-item__img menu-item__img--ph" aria-hidden="true">' + itemIcon(cat.name, item.name) + '</span>';
+              }
+              html += '<div class="menu-item__body">';
+              html += '<h3 class="menu-item__name">' + escapeHtml(item.name);
+              if (item.badge === 'NEW') html += ' <span class="menu-badge">Nouveau</span>';
+              if (item.badge === '★') html += ' <span class="menu-badge menu-badge--star">★</span>';
+              html += '</h3>';
+              if (item.description) html += '<p class="menu-item__desc">' + escapeHtml(item.description) + '</p>';
+              if (item.note) html += '<p class="menu-item__desc"><em>' + escapeHtml(item.note) + '</em></p>';
+              html += '</div>';
+              if (item.price) html += '<span class="menu-item__price price">' + escapeHtml(item.price) + '</span>';
+              html += '</article>';
+            });
             html += '</div>';
-          });
+          }
 
-          html += '</div></div>';
+          html += '</section>';
         });
 
         if (section === 'carte') {
-          html += '<div class="fidelity-banner"><p class="main">Carte de fidélité digitale — 10 pizzas achetées = 11ème offerte*</p><p class="sub">*sauf pizza du moment ou tartufo</p></div>';
+          html += '<aside class="menu-notice" style="margin-top:var(--s-xl);text-align:center;font-style:normal;"><strong style="color:var(--gold);">Carte de fidélité</strong> — 10 pizzas achetées, la 11<sup>e</sup> offerte. <span style="color:var(--ink-3);">(Hors pizza du moment &amp; Tartufo)</span></aside>';
         }
 
         container.innerHTML = html;
@@ -230,53 +271,30 @@
       .catch(function() {});
   }
 
-  // ===== PHONE POPOVER =====
+  // ===== PHONE SHEET (unifié popover + bottomsheet via CSS) =====
   function initPhonePopover() {
     var btn = document.getElementById('phoneBtn');
-    if (!btn) return;
+    var sheet = document.getElementById('phoneSheet');
+    var backdrop = document.getElementById('phoneBackdrop');
+    var closeBtn = document.getElementById('phoneSheetClose');
+    if (!btn || !sheet || !backdrop) return;
 
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      var isMobile = window.innerWidth <= 768;
-
-      if (isMobile) {
-        var bs = document.getElementById('phoneBottomsheet');
-        var ov = document.getElementById('phoneOverlay');
-        if (bs && ov) {
-          bs.classList.add('active');
-          ov.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        }
-      } else {
-        var pop = document.getElementById('phonePopover');
-        var popOv = document.getElementById('phonePopoverOverlay');
-        if (pop && popOv) {
-          pop.classList.add('active');
-          popOv.classList.add('active');
-        }
-      }
-    });
-
-    // Close bottomsheet
-    var closeSheet = function() {
-      var bs = document.getElementById('phoneBottomsheet');
-      var ov = document.getElementById('phoneOverlay');
-      if (bs) bs.classList.remove('active');
-      if (ov) ov.classList.remove('active');
+    function open() {
+      sheet.setAttribute('aria-hidden', 'false');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      sheet.setAttribute('aria-hidden', 'true');
+      backdrop.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-    };
-    var phoneOv = document.getElementById('phoneOverlay');
-    if (phoneOv) phoneOv.addEventListener('click', closeSheet);
-
-    // Close desktop popover
-    var closePopover = function() {
-      var pop = document.getElementById('phonePopover');
-      var popOv = document.getElementById('phonePopoverOverlay');
-      if (pop) pop.classList.remove('active');
-      if (popOv) popOv.classList.remove('active');
-    };
-    var popoverOv = document.getElementById('phonePopoverOverlay');
-    if (popoverOv) popoverOv.addEventListener('click', closePopover);
+    }
+    btn.addEventListener('click', function(e) { e.preventDefault(); open(); });
+    backdrop.addEventListener('click', close);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && sheet.getAttribute('aria-hidden') === 'false') close();
+    });
   }
 
   // ===== HELPERS =====
@@ -285,6 +303,27 @@
     var div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
+  }
+
+  // Icônes de fallback pour items sans photo — détection simple par mots-clés
+  var ICONS = {
+    pizza:   '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="14" cy="9.5" r=".8" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="14" r=".7" fill="currentColor" stroke="none"/></svg>',
+    glass:   '<svg viewBox="0 0 24 24"><path d="M7 3h10l-1 9c0 2-2 3.5-4 3.5S8 14 8 12l-1-9z"/><path d="M12 15.5V21"/><path d="M9 21h6"/></svg>',
+    dessert: '<svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M5 20l1.5-8h11L19 20"/><path d="M8.5 12c0-2 1.5-3.5 3.5-3.5s3.5 1.5 3.5 3.5"/><path d="M12 6v2.5"/></svg>',
+    platter: '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="17" rx="9" ry="1.8"/><circle cx="8" cy="13" r="2"/><circle cx="13" cy="12" r="2.5"/><circle cx="17" cy="13.5" r="1.6"/></svg>',
+    skewer:  '<svg viewBox="0 0 24 24"><line x1="2" y1="12" x2="22" y2="12"/><circle cx="8" cy="12" r="2.3"/><circle cx="13" cy="12" r="2.3"/><circle cx="18" cy="12" r="2.3"/></svg>',
+    bread:   '<svg viewBox="0 0 24 24"><path d="M3 12c0-3 3-5 9-5s9 2 9 5-3 5-9 5-9-2-9-5z"/><path d="M7 12c1.5.8 3 1 5 1s3.5-.2 5-1"/></svg>',
+    fork:    '<svg viewBox="0 0 24 24"><path d="M8 3v7a2 2 0 0 0 4 0V3"/><path d="M10 10v11"/><path d="M16 3c-1 3-1 6 0 8v10"/></svg>'
+  };
+  function itemIcon(catName, itemName) {
+    var t = ((catName || '') + ' ' + (itemName || '')).toLowerCase();
+    if (/pizza|calzone|focaccia/.test(t)) return ICONS.pizza;
+    if (/vin|bi[èe]re|boisson|limonade|soda|cola|eau|jus|spritz|campari|aperol/.test(t)) return ICONS.glass;
+    if (/dolci|tiramisu|cannoli|panna|dessert|g[âa]teau|chocolat|fondant|glace|pistache/.test(t)) return ICONS.dessert;
+    if (/planche|charcut|fromage|c[œoe]ur|ap[ée]ro|bouch[ée]e|feuillet[ée]|navette|verrine/.test(t)) return ICONS.platter;
+    if (/brochette/.test(t)) return ICONS.skewer;
+    if (/pain|bruschetta|panini|sandwich/.test(t)) return ICONS.bread;
+    return ICONS.fork;
   }
 
   // ===== CART SYSTEM =====
@@ -487,91 +526,49 @@
     renderBadge();
   }
 
-  // Inject add-to-cart buttons into menu items
+  // Rend les items "carte" cliquables pour ajout panier
   function injectCartButtons() {
     document.querySelectorAll('.menu-item').forEach(function(item) {
-      if (item.querySelector('.cart-add-btn')) return;
-      var headerEl = item.querySelector('.menu-item__header');
-      if (!headerEl) return;
-      var h3 = headerEl.querySelector('h3');
-      var priceSpan = headerEl.querySelector('.menu-item__price');
-      if (!h3 || !priceSpan) return;
-      var name = h3.textContent.replace(/NEW/g, '').replace(/\u2605/g, '').trim();
-      var priceText = priceSpan.textContent.trim();
-      var price = parseFloat(priceText.replace('\u20AC', '').replace(',', '.'));
+      if (item.classList.contains('menu-item--clickable')) return;
+      var nameEl = item.querySelector('.menu-item__name');
+      var priceEl = item.querySelector('.menu-item__price');
+      if (!nameEl || !priceEl) return;
+      var name = nameEl.textContent.replace(/Nouveau/gi, '').replace(/\u2605/g, '').trim();
+      var priceText = priceEl.textContent.trim();
+      var price = parseFloat(priceText.replace(/[^\d,\.]/g, '').replace(',', '.'));
       if (isNaN(price)) return;
-      var btn = document.createElement('button');
-      btn.className = 'cart-add-btn';
+
+      var btn = document.createElement('span');
+      btn.className = 'menu-item__add';
       btn.textContent = '+';
-      btn.setAttribute('aria-label', 'Ajouter ' + name);
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
+      btn.setAttribute('aria-hidden', 'true');
+      item.appendChild(btn);
+
+      item.classList.add('menu-item--clickable');
+      item.setAttribute('role', 'button');
+      item.setAttribute('tabindex', '0');
+      item.setAttribute('aria-label', 'Ajouter ' + name + ' au panier');
+      item.addEventListener('click', function() {
         if (window.addToCart) window.addToCart(name, price);
       });
-      headerEl.appendChild(btn);
+      item.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (window.addToCart) window.addToCart(name, price);
+        }
+      });
     });
   }
 
-  // Override loadMenu to inject cart buttons after menu loads
-  var origLoadMenu = loadMenu;
+  // Override loadMenu pour ajouter les boutons panier après chargement
+  var _origLoadMenu = loadMenu;
   function loadMenuWithCart(section) {
-    fetch(API + '/api/menu?section=' + section)
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var container = document.getElementById('menuContent');
-        if (!container) return;
-
-        var html = '';
-        if (section === 'carte') {
-          html += '<div class="menu-notice">Toutes nos pizzas sont élaborées à base de produits frais en provenance d\'Italie, avec une mozzarella Fior di Latte, une pâte maison à haute hydratation et un temps de pousse de 48h minimum.</div>';
-        }
-        if (section === 'traiteur') {
-          html += '<div class="traiteur-note"><p><strong>Service traiteur</strong> — Sur commande, minimum 3 jours à l\'avance.<br>Minimum 6 personnes. Livraison possible (renseignez-vous en magasin).</p></div>';
-        }
-
-        data.categories.forEach(function(cat) {
-          html += '<div class="menu-category">';
-          html += '<h2 class="menu-category__title">' + escapeHtml(cat.name) + '</h2>';
-          html += '<hr class="decorative-line" style="margin-left:0;">';
-          html += '<div class="menu-grid">';
-          cat.items.forEach(function(item) {
-            var highlightClass = item.badge === '\u2605' ? ' menu-item--highlight' : '';
-            html += '<div class="menu-item' + highlightClass + '">';
-            if (item.image_path) {
-              html += '<img class="menu-item__img" src="' + API + '/api/images/' + escapeHtml(item.image_path) + '" alt="" loading="lazy">';
-            }
-            html += '<div class="menu-item__body">';
-            html += '<div class="menu-item__header">';
-            html += '<h3>' + escapeHtml(item.name);
-            if (item.badge === 'NEW') html += '<span class="badge-new">NEW</span>';
-            if (item.badge === '\u2605') html += '<span class="badge-star"> \u2605</span>';
-            html += '</h3>';
-            html += '<span class="menu-item__dots"></span>';
-            if (item.price) html += '<span class="menu-item__price">' + escapeHtml(item.price) + '</span>';
-            html += '</div>';
-            if (item.description) html += '<p>' + escapeHtml(item.description) + '</p>';
-            if (item.note) html += '<p class="menu-item__note">' + escapeHtml(item.note) + '</p>';
-            html += '</div></div>';
-          });
-          html += '</div></div>';
-        });
-
-        if (section === 'carte') {
-          html += '<div class="fidelity-banner"><p class="main"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> Carte de fidélité digitale — 10 pizzas achetées = 11ème offerte*</p><p class="sub">*sauf pizza du moment ou tartufo</p></div>';
-        }
-
-        container.innerHTML = html;
-        initFadeIn();
-
-        // Only inject cart buttons on "carte" section (pizzas/snacking)
-        if (section === 'carte') {
-          setTimeout(injectCartButtons, 50);
-        }
-      })
-      .catch(function() {});
+    _origLoadMenu(section);
+    if (section === 'carte') {
+      setTimeout(injectCartButtons, 80);
+    }
   }
 
-  // Replace loadMenu if on menu page
   if (document.getElementById('menuContent')) {
     loadMenu = loadMenuWithCart;
     initCart();
