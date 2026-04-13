@@ -1,57 +1,35 @@
 # CasaMia Pizzeria
 
-Site vitrine de **CasaMia**, pizzeria artisanale sicilienne située à Entraigues-sur-la-Sorgue (84320), Vaucluse.
-
-## Aperçu
-
-CasaMia est une pizzeria-traiteur-épicerie tenue par un chef sicilien, proposant des pizzas au feu de bois, un service traiteur italien et une épicerie fine de produits importés de Sicile.
-
-## Pages
-
-| Fichier | Description |
-|---------|-------------|
-| `index.html` | Page d'accueil — présentation, avis clients, galerie |
-| `carte.html` | La carte — pizzas, entrées, desserts, boissons |
-| `traiteur.html` | Service traiteur italien |
-| `histoire.html` | Notre histoire — parcours du chef |
-| `contact.html` | Coordonnées, horaires, formulaire de contact |
+Site vitrine de **CasaMia**, pizzeria artisanale sicilienne avec deux points de vente :
+- **Entraigues-sur-la-Sorgue** : 51 Rue Laurent Bertrand, 84320 — Tel: 06 45 79 49 30
+- **Althen-des-Paluds** : 254 Avenue Ernest Perrin, 84210 — Tel: 04 90 36 16 33
 
 ## Stack technique
 
-- **HTML5** sémantique avec données structurées Schema.org (JSON-LD)
-- **CSS3** pur (fichier unique `style.css`) — responsive, sans framework
-- **Aucune dépendance** JavaScript de build ou framework frontend
-- Images optimisées dans le dossier `images/`
+- **Backend** : Go 1.24 + Chi router + PostgreSQL + JWT auth
+- **Frontend** : HTML/CSS/JS statique servi par le backend Go
+- **Déploiement** : Docker (Dokploy)
 
-## Lancer le site en local
-
-Le site est entièrement statique. Il suffit d'ouvrir `index.html` dans un navigateur ou de lancer un serveur local :
+## Lancer en local
 
 ```bash
-# Avec Python
-python3 -m http.server 8000
-
-# Avec Node.js
-npx serve .
+docker-compose -f docker-compose.local.yml up --build
 ```
 
-Puis ouvrir [http://localhost:8000](http://localhost:8000).
+Puis ouvrir [http://localhost:3000](http://localhost:3000).
 
 ## Structure du projet
 
 ```
 casa-mia/
-├── index.html          # Page d'accueil
-├── carte.html          # Menu / carte
-├── traiteur.html       # Service traiteur
-├── histoire.html       # Notre histoire
-├── contact.html        # Page contact
-├── style.css           # Feuille de styles unique
-└── images/             # Visuels du site
+├── backend/           # API Go (handlers, models, services, middleware)
+├── frontend/          # Pages HTML + CSS + JS + images
+├── photos/            # 38 photos sources renommées
+├── Dockerfile         # Build production multi-stage
+├── docker-compose.yml # Production (Dokploy)
+└── docker-compose.local.yml  # Développement local
 ```
 
-## Informations pratiques
+## Documentation
 
-- **Adresse** : Entraigues-sur-la-Sorgue, 84320
-- **Téléphone** : 06 45 79 49 30
-- **Horaires** : Mar–Dim, 11h30–14h00 & 18h00–22h00 (fermé le lundi)
+Voir `REFONTE-CASAMIA.md` pour le cahier des charges complet et `progress-refonte.md` pour le suivi de progression.

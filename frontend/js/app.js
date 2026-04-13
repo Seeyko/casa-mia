@@ -82,7 +82,7 @@
         if (!container) return;
         container.innerHTML = statuses.map(function(s) {
           var cls = s.is_open ? 'status-badge--open' : 'status-badge--closed';
-          var label = s.is_open ? 'Ouvert' : 'Ferme';
+          var label = s.is_open ? 'Ouvert' : 'Fermé';
           return '<div class="status-badge ' + cls + '">' +
             '<span class="status-badge__dot"></span>' +
             '<span class="status-badge__label"><strong>' + escapeHtml(s.name) + '</strong> — ' + label + '</span>' +
@@ -152,7 +152,7 @@
       var dh = hoursObj[day];
       var cap = day.charAt(0).toUpperCase() + day.slice(1);
       if (!dh || !dh.slots || !dh.slots.length) {
-        lines.push(cap + ' : Ferme');
+        lines.push(cap + ' : Fermé');
       } else {
         var times = dh.slots.map(function(s) { return s.open + '-' + s.close; }).join(' / ');
         lines.push(cap + ' : ' + times);
@@ -182,15 +182,15 @@
         var html = '';
 
         if (section === 'carte') {
-          html += '<div class="menu-notice">Toutes nos pizzas sont elaborees a base de produits frais en provenance d\'Italie, avec une mozzarella Fior di Latte, une pate maison a haute hydratation et un temps de pousse de 48h minimum.</div>';
+          html += '<div class="menu-notice">Toutes nos pizzas sont élaborées à base de produits frais en provenance d\'Italie, avec une mozzarella Fior di Latte, une pâte maison à haute hydratation et un temps de pousse de 48h minimum.</div>';
         }
 
         if (section === 'traiteur') {
-          html += '<div class="traiteur-note"><p><strong>Service traiteur</strong> — Sur commande, minimum 3 jours a l\'avance.<br>Minimum 6 personnes. Livraison possible (renseignez-vous en magasin).</p></div>';
+          html += '<div class="traiteur-note"><p><strong>Service traiteur</strong> — Sur commande, minimum 3 jours à l\'avance.<br>Minimum 6 personnes. Livraison possible (renseignez-vous en magasin).</p></div>';
         }
 
         data.categories.forEach(function(cat) {
-          html += '<div class="menu-category fade-in">';
+          html += '<div class="menu-category">';
           html += '<h2 class="menu-category__title">' + escapeHtml(cat.name) + '</h2>';
           html += '<hr class="decorative-line" style="margin-left:0;">';
           html += '<div class="menu-grid">';
@@ -221,7 +221,7 @@
         });
 
         if (section === 'carte') {
-          html += '<div class="fidelity-banner"><p class="main">Carte de fidelite digitale — 10 pizzas achetees = 11eme offerte*</p><p class="sub">*sauf pizza du moment ou tartufo</p></div>';
+          html += '<div class="fidelity-banner"><p class="main">Carte de fidélité digitale — 10 pizzas achetées = 11ème offerte*</p><p class="sub">*sauf pizza du moment ou tartufo</p></div>';
         }
 
         container.innerHTML = html;
@@ -392,7 +392,7 @@
       }
       var loc = getSelectedLocation();
       lines.push('Point de retrait: ' + (loc === 'althen' ? 'Althen-des-Paluds' : 'Entraigues-sur-la-Sorgue'));
-      if (cartTimeEl.value) lines.push('Heure souhaitee: ' + cartTimeEl.value.replace(':', 'h'));
+      if (cartTimeEl.value) lines.push('Heure souhaitée : ' + cartTimeEl.value.replace(':', 'h'));
       return lines.join('\n');
     }
 
@@ -523,14 +523,14 @@
 
         var html = '';
         if (section === 'carte') {
-          html += '<div class="menu-notice">Toutes nos pizzas sont elaborees a base de produits frais en provenance d\'Italie, avec une mozzarella Fior di Latte, une pate maison a haute hydratation et un temps de pousse de 48h minimum.</div>';
+          html += '<div class="menu-notice">Toutes nos pizzas sont élaborées à base de produits frais en provenance d\'Italie, avec une mozzarella Fior di Latte, une pâte maison à haute hydratation et un temps de pousse de 48h minimum.</div>';
         }
         if (section === 'traiteur') {
-          html += '<div class="traiteur-note"><p><strong>Service traiteur</strong> — Sur commande, minimum 3 jours a l\'avance.<br>Minimum 6 personnes. Livraison possible (renseignez-vous en magasin).</p></div>';
+          html += '<div class="traiteur-note"><p><strong>Service traiteur</strong> — Sur commande, minimum 3 jours à l\'avance.<br>Minimum 6 personnes. Livraison possible (renseignez-vous en magasin).</p></div>';
         }
 
         data.categories.forEach(function(cat) {
-          html += '<div class="menu-category fade-in">';
+          html += '<div class="menu-category">';
           html += '<h2 class="menu-category__title">' + escapeHtml(cat.name) + '</h2>';
           html += '<hr class="decorative-line" style="margin-left:0;">';
           html += '<div class="menu-grid">';
@@ -557,7 +557,7 @@
         });
 
         if (section === 'carte') {
-          html += '<div class="fidelity-banner"><p class="main"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> Carte de fidelite digitale — 10 pizzas achetees = 11eme offerte*</p><p class="sub">*sauf pizza du moment ou tartufo</p></div>';
+          html += '<div class="fidelity-banner"><p class="main"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> Carte de fidélité digitale — 10 pizzas achetées = 11ème offerte*</p><p class="sub">*sauf pizza du moment ou tartufo</p></div>';
         }
 
         container.innerHTML = html;
