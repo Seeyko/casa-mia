@@ -54,21 +54,24 @@
     .panel { display: none; }
     .panel.active { display: block; }
 
-    /* Cards */
-    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 16px 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 16px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 16px; }
+    /* Cards — multi-column grid */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(440px, 100%), 1fr)); gap: 10px; }
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 12px; min-width: 0; }
+    .card-info { min-width: 0; flex: 1; }
     .card-title { font-weight: 600; font-size: .95rem; }
     .card-meta { color: var(--text2); font-size: .8125rem; margin-top: 2px; }
-    .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .card-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .card-img { width: 56px; height: 56px; object-fit: cover; border-radius: var(--radius); flex-shrink: 0; }
 
     /* Buttons */
-    .btn { padding: 10px 16px; border-radius: var(--radius); font-size: .8125rem; cursor: pointer; border: 1px solid transparent; font-weight: 600; letter-spacing: 0.03em; font-family: inherit; transition: background .2s, color .2s, border-color .2s; }
+    .btn { padding: 10px 16px; border-radius: var(--radius); font-size: .8125rem; cursor: pointer; border: 1px solid transparent; font-weight: 600; letter-spacing: 0.03em; font-family: inherit; transition: background .2s, color .2s, border-color .2s; white-space: nowrap; }
     .btn-primary { background: var(--gold); color: var(--bg); border-color: var(--gold); }
     .btn-primary:hover { background: var(--gold-h); border-color: var(--gold-h); }
     .btn-danger { background: none; color: var(--red); border: 1px solid var(--red); }
     .btn-danger:hover { background: var(--red); color: var(--text); }
     .btn-sm { padding: 6px 12px; font-size: .75rem; }
+    .btn-lg { padding: 14px 24px; font-size: .9375rem; }
     .btn-add { margin-bottom: 20px; }
 
     /* Forms */
@@ -93,6 +96,65 @@
     .badge-green { background: oklch(68% 0.140 145 / .15); color: var(--green); border: 1px solid oklch(68% 0.140 145 / .3); }
     .badge-gray { background: oklch(100% 0 0 / .05); color: var(--text2); border: 1px solid var(--border); }
     .badge-section { background: oklch(76% 0.118 80 / .12); color: var(--gold); border: 1px solid oklch(76% 0.118 80 / .3); }
+
+    /* Form grid pour item modal */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 14px; margin-bottom: 16px; }
+    .form-group--span2 { grid-column: 1 / -1; }
+    .form-group { margin-bottom: 0; }
+
+    /* Toggle "disponible" — switch élégant */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 14px 16px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+    .toggle-row__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .toggle-row__info strong { font-size: .9375rem; font-weight: 600; color: var(--text); }
+    .toggle-row__info span { font-size: .8125rem; color: var(--text2); }
+    .switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; cursor: pointer; }
+    .switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .switch__track {
+      position: absolute; inset: 0; border-radius: 999px;
+      background: var(--bg2); border: 1px solid var(--border);
+      transition: background .2s, border-color .2s;
+    }
+    .switch__track::after {
+      content: ""; position: absolute;
+      top: 50%; left: 3px; width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--text2);
+      transform: translateY(-50%);
+      transition: transform .2s, background .2s;
+    }
+    .switch input:checked ~ .switch__track { background: oklch(from var(--gold) l c h / .25); border-color: var(--gold); }
+    .switch input:checked ~ .switch__track::after { transform: translate(18px, -50%); background: var(--gold); }
+    .switch input:focus-visible ~ .switch__track { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* Settings card — plus grande */
+    .settings-card {
+      max-width: 560px;
+      padding: clamp(28px, 4vw, 44px);
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+    }
+    .settings-card h2 {
+      font-size: 1.75rem; margin-bottom: 8px;
+      color: var(--text);
+    }
+    .settings-card .settings-lede {
+      color: var(--text2); font-size: .95rem; line-height: 1.5;
+      margin-bottom: 28px;
+    }
+    .settings-card .form-group { margin-bottom: 16px; }
+    .settings-card .form-group input {
+      font-size: 1rem;
+      padding: 12px 14px;
+    }
+    .settings-card .success {
+      color: var(--green); font-size: .9rem;
+      margin-top: 12px; display: none;
+    }
+    .settings-card .error { margin-top: 12px; }
 
     :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   </style>
@@ -135,44 +197,44 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('news')">Actualités</button>
-    <button class="tab" onclick="switchTab('menu')">Carte &amp; Menus</button>
-    <button class="tab" onclick="switchTab('catégories')">Catégories</button>
-    <button class="tab" onclick="switchTab('settings')">Paramètres</button>
+    <button class="tab active" data-tab="news" onclick="switchTab(this, 'news')">Actualités</button>
+    <button class="tab" data-tab="menu" onclick="switchTab(this, 'menu')">Carte &amp; Menus</button>
+    <button class="tab" data-tab="settings" onclick="switchTab(this, 'settings')">Paramètres</button>
   </div>
 
   <!-- News Panel -->
   <div id="panel-news" class="panel active">
     <button class="btn btn-primary btn-add" onclick="openNewsForm()">+ Ajouter une actualité</button>
-    <div id="newsList"></div>
+    <div id="newsList" class="card-grid"></div>
   </div>
 
   <!-- Menu Panel -->
   <div id="panel-menu" class="panel">
-    <div style="display:flex;gap:8px;margin-bottom:16px;">
-      <select id="menuCategoryFilter" onchange="loadItems()" style="padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.9rem;">
+    <div style="display:flex;gap:12px;margin-bottom:20px;align-items:center;flex-wrap:wrap;">
+      <select id="menuCategoryFilter" onchange="loadItems()" style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.875rem;font-family:inherit;">
         <option value="">Toutes les catégories</option>
       </select>
       <button class="btn btn-primary" onclick="openItemForm()">+ Ajouter un item</button>
     </div>
-    <div id="itemsList"></div>
-  </div>
-
-  <!-- Catégories Panel -->
-  <div id="panel-catégories" class="panel">
-    <button class="btn btn-primary btn-add" onclick="openCategoryForm()">+ Ajouter une catégorie</button>
-    <div id="catégoriesList"></div>
+    <div id="itemsList" class="card-grid"></div>
   </div>
 
   <!-- Settings Panel -->
   <div id="panel-settings" class="panel">
-    <div class="card" style="max-width:400px;">
-      <h3 style="margin-bottom:16px;color:var(--gold);">Changer le mot de passe</h3>
-      <div class="form-group"><label>Mot de passe actuel</label><input type="password" id="settings_currentpw"></div>
-      <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="settings_newpw" placeholder="Min 6 caractères"></div>
-      <button class="btn btn-primary" onclick="changePassword()" style="margin-top:8px;">Enregistrer</button>
-      <p class="error" id="settingsError" style="margin-top:8px;"></p>
-      <p id="settingsSuccess" style="color:var(--green);font-size:.85rem;margin-top:8px;display:none;">Mot de passe modifié avec succès.</p>
+    <div class="settings-card">
+      <h2>Changer le mot de passe</h2>
+      <p class="settings-lede">Utilisé pour accéder à cet espace d'administration. Minimum 6 caractères.</p>
+      <div class="form-group">
+        <label>Mot de passe actuel</label>
+        <input type="password" id="settings_currentpw" autocomplete="current-password">
+      </div>
+      <div class="form-group">
+        <label>Nouveau mot de passe</label>
+        <input type="password" id="settings_newpw" placeholder="Min 6 caractères" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary btn-lg" onclick="changePassword()">Enregistrer</button>
+      <p class="error" id="settingsError"></p>
+      <p id="settingsSuccess" class="success">Mot de passe modifié avec succès.</p>
     </div>
   </div>
 </div>
@@ -260,7 +322,7 @@ function changePassword() {
     .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
     .then(function(res) {
       if (!res.ok) throw new Error(res.data.error || 'Erreur');
-      document.getElementById('settingsSuccess').style.display = '';
+      document.getElementById('settingsSuccess').style.display = 'block';
       document.getElementById('settings_currentpw').value = '';
       document.getElementById('settings_newpw').value = '';
     })
@@ -310,14 +372,26 @@ function adminFetch(path, opts) {
 }
 
 // ===== TABS =====
-function switchTab(name) {
+function switchTab(btn, name) {
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-  event.target.classList.add('active');
+  if (btn) btn.classList.add('active');
   document.getElementById('panel-' + name).classList.add('active');
 }
 
-function loadAll() { loadNews(); loadCatégories(); loadCategoryFilter(); loadItems(); }
+// Cache catégories pour ouvrir les modals rapidement
+let CATS_CACHE = [];
+function fetchCategories() {
+  return adminFetch('/menu/categories')
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(cats) { CATS_CACHE = cats || []; return CATS_CACHE; })
+    .catch(function() { CATS_CACHE = []; return []; });
+}
+
+function loadAll() {
+  fetchCategories().then(function() { loadCategoryFilter(); loadItems(); });
+  loadNews();
+}
 
 // ===== NEWS =====
 function loadNews() {
@@ -327,11 +401,15 @@ function loadNews() {
     el.innerHTML = news.map(function(n) {
       var img = n.image_path ? '<img class="card-img" src="' + API + '/images/' + n.image_path + '">' : '';
       var badge = n.published ? '<span class="badge badge-green">Publié</span>' : '<span class="badge badge-gray">Brouillon</span>';
-      return '<div class="card"><div class="card-header"><div style="display:flex;align-items:center;">' + img +
-        '<div><span class="card-title">' + esc(n.title) + '</span> ' + badge +
-        '<div class="card-meta">' + new Date(n.created_at).toLocaleDateString('fr-FR') + '</div></div></div>' +
-        '<div class="card-actions"><button class="btn btn-sm btn-primary" onclick="editNews(' + n.id + ')">Modifier</button>' +
-        '<button class="btn btn-sm btn-danger" onclick="deleteNews(' + n.id + ')">Supprimer</button></div></div></div>';
+      return '<div class="card">' + img +
+        '<div class="card-header"><div class="card-info">' +
+          '<div><span class="card-title">' + esc(n.title || 'Sans titre') + '</span> ' + badge + '</div>' +
+          '<div class="card-meta">' + new Date(n.created_at).toLocaleDateString('fr-FR') + '</div>' +
+        '</div>' +
+        '<div class="card-actions">' +
+          '<button class="btn btn-sm btn-primary" onclick="editNews(' + n.id + ')">Modifier</button>' +
+          '<button class="btn btn-sm btn-danger" onclick="deleteNews(' + n.id + ')">Supprimer</button>' +
+        '</div></div></div>';
     }).join('');
   });
 }
@@ -375,59 +453,11 @@ function deleteNews(id) {
   adminFetch('/news/' + id, { method: 'DELETE' }).then(function() { loadNews(); });
 }
 
-// ===== CATEGORIES =====
-function loadCatégories() {
-  adminFetch('/menu/catégories').then(function(r) { return r.json(); }).then(function(cats) {
-    var el = document.getElementById('catégoriesList');
-    el.innerHTML = cats.map(function(c) {
-      return '<div class="card"><div class="card-header"><div><span class="card-title">' + esc(c.name) + '</span> ' +
-        '<span class="badge badge-section">' + c.section + '</span> ' +
-        '<span class="card-meta">Ordre: ' + c.sort_order + '</span></div>' +
-        '<div class="card-actions"><button class="btn btn-sm btn-primary" onclick="editCategory(' + c.id + ')">Modifier</button>' +
-        '<button class="btn btn-sm btn-danger" onclick="deleteCategory(' + c.id + ')">Supprimer</button></div></div></div>';
-    }).join('');
-  });
-}
-
+// ===== CATEGORY FILTER (readonly, hardcodé non géré) =====
 function loadCategoryFilter() {
-  adminFetch('/menu/catégories').then(function(r) { return r.json(); }).then(function(cats) {
-    var el = document.getElementById('menuCategoryFilter');
-    el.innerHTML = '<option value="">Toutes les catégories</option>' +
-      cats.map(function(c) { return '<option value="' + c.id + '">' + esc(c.name) + ' (' + c.section + ')</option>'; }).join('');
-  });
-}
-
-function openCategoryForm(data) {
-  var d = data || {};
-  var isEdit = !!d.id;
-  document.getElementById('formModal').innerHTML =
-    '<h3>' + (isEdit ? 'Modifier' : 'Nouvelle') + ' catégorie</h3>' +
-    '<div class="form-group"><label>Nom</label><input id="f_catname" value="' + esc(d.name || '') + '"></div>' +
-    '<div class="form-group"><label>Section</label><select id="f_catsection"><option value="carte"' + (d.section === 'carte' ? ' selected' : '') + '>Carte</option><option value="traiteur"' + (d.section === 'traiteur' ? ' selected' : '') + '>Traiteur</option></select></div>' +
-    '<div class="form-group"><label>Ordre</label><input type="number" id="f_catorder" value="' + (d.sort_order || 0) + '"></div>' +
-    '<div class="form-actions"><button class="form-cancel" onclick="closeForm()">Annuler</button>' +
-    '<button class="btn btn-primary" onclick="saveCategory(' + (d.id || 'null') + ')">Enregistrer</button></div>';
-  document.getElementById('formOverlay').classList.add('active');
-}
-
-function editCategory(id) {
-  adminFetch('/menu/catégories').then(function(r) { return r.json(); }).then(function(cats) {
-    var c = cats.find(function(x) { return x.id === id; });
-    if (c) openCategoryForm(c);
-  });
-}
-
-function saveCategory(id) {
-  var body = { name: document.getElementById('f_catname').value, section: document.getElementById('f_catsection').value, sort_order: parseInt(document.getElementById('f_catorder').value) || 0 };
-  var method = id ? 'PUT' : 'POST';
-  var path = id ? '/menu/catégories/' + id : '/menu/catégories';
-  adminFetch(path, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-    .then(function() { closeForm(); loadCatégories(); loadCategoryFilter(); });
-}
-
-function deleteCategory(id) {
-  if (!confirm('Supprimer cette catégorie et tous ses items ?')) return;
-  adminFetch('/menu/catégories/' + id, { method: 'DELETE' }).then(function() { loadCatégories(); loadCategoryFilter(); loadItems(); });
+  var el = document.getElementById('menuCategoryFilter');
+  el.innerHTML = '<option value="">Toutes les catégories</option>' +
+    CATS_CACHE.map(function(c) { return '<option value="' + c.id + '">' + esc(c.name) + ' (' + c.section + ')</option>'; }).join('');
 }
 
 // ===== MENU ITEMS =====
@@ -438,16 +468,22 @@ function loadItems() {
     var el = document.getElementById('itemsList');
     if (!items.length) { el.innerHTML = '<p style="color:var(--text2);">Aucun item.</p>'; return; }
     el.innerHTML = items.map(function(item) {
-      var img = item.image_path ? '<img class="card-img" src="' + API + '/images/' + item.image_path + '">' : '';
+      var img = item.image_path
+        ? '<img class="card-img" src="' + API + '/images/' + item.image_path + '">'
+        : '<span class="card-img" style="background:var(--bg3);display:grid;place-items:center;color:var(--text2);font-size:.7rem;">—</span>';
       var badges = '';
-      if (item.badge) badges += '<span class="badge badge-green">' + esc(item.badge) + '</span> ';
+      if (item.badge) badges += '<span class="badge badge-section">' + esc(item.badge) + '</span> ';
       if (!item.available) badges += '<span class="badge badge-gray">Indisponible</span> ';
-      return '<div class="card"><div class="card-header"><div style="display:flex;align-items:center;">' + img +
-        '<div><span class="card-title">' + esc(item.name) + '</span> ' + badges +
-        (item.price ? '<span class="card-meta" style="color:var(--gold);font-weight:600;"> ' + esc(item.price) + '</span>' : '') +
-        '<div class="card-meta">' + esc(item.description || '') + '</div></div></div>' +
-        '<div class="card-actions"><button class="btn btn-sm btn-primary" onclick="editItem(' + item.id + ')">Modifier</button>' +
-        '<button class="btn btn-sm btn-danger" onclick="deleteItem(' + item.id + ')">Supprimer</button></div></div></div>';
+      var price = item.price ? '<span style="color:var(--gold);font-weight:700;margin-left:4px;">' + esc(item.price) + '</span>' : '';
+      return '<div class="card">' + img +
+        '<div class="card-header"><div class="card-info">' +
+          '<div><span class="card-title">' + esc(item.name) + '</span>' + price + ' ' + badges + '</div>' +
+          (item.description ? '<div class="card-meta" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(item.description) + '</div>' : '') +
+        '</div>' +
+        '<div class="card-actions">' +
+          '<button class="btn btn-sm btn-primary" onclick="editItem(' + item.id + ')">Modifier</button>' +
+          '<button class="btn btn-sm btn-danger" onclick="deleteItem(' + item.id + ')">Supprimer</button>' +
+        '</div></div></div>';
     }).join('');
   });
 }
@@ -455,33 +491,45 @@ function loadItems() {
 function openItemForm(data) {
   var d = data || {};
   var isEdit = !!d.id;
-  // Need catégories for select
-  adminFetch('/menu/catégories').then(function(r) { return r.json(); }).then(function(cats) {
-    var catOpts = cats.map(function(c) {
-      return '<option value="' + c.id + '"' + (d.category_id == c.id ? ' selected' : '') + '>' + esc(c.name) + ' (' + c.section + ')</option>';
+  var openModal = function() {
+    var catOpts = CATS_CACHE.map(function(c) {
+      return '<option value="' + c.id + '"' + (d.category_id == c.id ? ' selected' : '') + '>' + esc(c.name) + ' — ' + c.section + '</option>';
     }).join('');
+    var available = d.available !== false;
     document.getElementById('formModal').innerHTML =
       '<h3>' + (isEdit ? 'Modifier' : 'Nouvel') + ' item</h3>' +
-      '<div class="form-group"><label>Categorie</label><select id="f_itemcat">' + catOpts + '</select></div>' +
-      '<div class="form-group"><label>Nom</label><input id="f_itemname" value="' + esc(d.name || '') + '"></div>' +
-      '<div class="form-group"><label>Description</label><textarea id="f_itemdesc">' + esc(d.description || '') + '</textarea></div>' +
-      '<div class="form-group"><label>Prix</label><input id="f_itemprice" value="' + esc(d.price || '') + '" placeholder="12,00€"></div>' +
-      '<div class="form-group"><label>Badge</label><input id="f_itembadge" value="' + esc(d.badge || '') + '" placeholder="NEW, ★, etc."></div>' +
-      '<div class="form-group"><label>Note</label><input id="f_itemnote" value="' + esc(d.note || '') + '"></div>' +
-      '<div class="form-group"><label>Ordre</label><input type="number" id="f_itemorder" value="' + (d.sort_order || 0) + '"></div>' +
-      '<div class="form-group"><label>Image</label><input type="file" id="f_itemimage" accept="image/*"></div>' +
-      '<div class="form-group"><label><input type="checkbox" id="f_itemavail"' + (d.available !== false ? ' checked' : '') + '> Disponible</label></div>' +
+      '<div class="form-grid">' +
+        '<div class="form-group form-group--span2"><label>Nom</label><input id="f_itemname" value="' + esc(d.name || '') + '" autocomplete="off"></div>' +
+        '<div class="form-group"><label>Catégorie</label><select id="f_itemcat">' + catOpts + '</select></div>' +
+        '<div class="form-group"><label>Prix</label><input id="f_itemprice" value="' + esc(d.price || '') + '" placeholder="12,00€"></div>' +
+        '<div class="form-group form-group--span2"><label>Description</label><textarea id="f_itemdesc" rows="2">' + esc(d.description || '') + '</textarea></div>' +
+        '<div class="form-group"><label>Badge</label><input id="f_itembadge" value="' + esc(d.badge || '') + '" placeholder="NEW, ★, etc."></div>' +
+        '<div class="form-group"><label>Ordre</label><input type="number" id="f_itemorder" value="' + (d.sort_order || 0) + '"></div>' +
+        '<div class="form-group form-group--span2"><label>Note (optionnel)</label><input id="f_itemnote" value="' + esc(d.note || '') + '"></div>' +
+        '<div class="form-group form-group--span2"><label>Image</label><input type="file" id="f_itemimage" accept="image/*"></div>' +
+      '</div>' +
+      '<div class="toggle-row">' +
+        '<div class="toggle-row__info"><strong>Disponible</strong><span>Décochez si l\'item est temporairement indisponible</span></div>' +
+        '<label class="switch"><input type="checkbox" id="f_itemavail"' + (available ? ' checked' : '') + '><span class="switch__track"></span></label>' +
+      '</div>' +
       '<div class="form-actions"><button class="form-cancel" onclick="closeForm()">Annuler</button>' +
       '<button class="btn btn-primary" onclick="saveItem(' + (d.id || 'null') + ')">Enregistrer</button></div>';
     document.getElementById('formOverlay').classList.add('active');
-  });
+  };
+  // Toujours ouvrir, même si cats vides : refetch en background pour prochaine fois
+  if (!CATS_CACHE.length) {
+    fetchCategories().then(openModal);
+  } else {
+    openModal();
+  }
 }
 
 function editItem(id) {
   adminFetch('/menu/items').then(function(r) { return r.json(); }).then(function(items) {
     var item = items.find(function(x) { return x.id === id; });
     if (item) openItemForm(item);
-  });
+    else alert('Item introuvable');
+  }).catch(function(e) { alert('Erreur: ' + e.message); });
 }
 
 function saveItem(id) {
