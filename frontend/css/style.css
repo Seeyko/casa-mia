@@ -1048,9 +1048,10 @@ p  { max-width: 70ch; }
   grid-template-columns: 1.5fr repeat(3, 1fr);
   gap: var(--s-xl);
   padding-bottom: var(--s-xl);
+  align-items: start;
 }
 .footer__grid > div { display: flex; flex-direction: column; align-items: flex-start; }
-.footer__grid .footer__phone { margin-top: auto; }
+.footer__grid > div:has(.footer__phone) .footer__title { min-height: 2.8em; }
 .footer__brand img { height: 140px; width: auto; margin-bottom: var(--s-sm); }
 .footer__brand p { font-size: var(--text-sm); color: var(--ink-3); max-width: 36ch; }
 .footer__title {
