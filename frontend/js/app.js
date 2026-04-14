@@ -198,7 +198,7 @@
         var html = '';
 
         if (section === 'carte') {
-          html += '<p class="menu-notice">Pizzas pétries à la main, pâte levée 48 h, mozzarella Fior di Latte, ingrédients importés de Sicile. Pâte disponible sans gluten sur demande.</p>';
+          html += '<p class="menu-notice">Pizzas étalées à la main, pâte à haute hydratation et longue fermentation de 48 h, mozzarella Fior di Latte, ingrédients importés d\'Italie (Naples, Pouilles). Pâte disponible sans gluten sur demande.</p>';
         }
 
         if (section === 'traiteur') {
