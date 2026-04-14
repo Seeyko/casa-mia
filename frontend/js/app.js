@@ -124,12 +124,11 @@
           var img = n.image_path
             ? '<figure class="news__figure"><img src="' + API + '/api/images/' + escapeHtml(n.image_path) + '" alt="" loading="lazy"></figure>'
             : '<figure class="news__figure" aria-hidden="true"></figure>';
-          var date = new Date(n.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
-          var body = '<div class="news__body reveal">' +
-            '<div class="news__date">' + date + '</div>' +
+          var hasText = n.title || n.content;
+          var body = hasText ? '<div class="news__body">' +
             (n.title ? '<h3 class="news__title">' + escapeHtml(n.title) + '</h3>' : '') +
             (n.content ? '<p class="news__text">' + escapeHtml(n.content) + '</p>' : '') +
-            '</div>';
+            '</div>' : '';
           return '<article class="news__item">' + img + body + '</article>';
         }).join('');
         initFadeIn();
