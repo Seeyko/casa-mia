@@ -538,28 +538,25 @@ p  { max-width: 70ch; }
 }
 .news__item {
   display: grid;
-  grid-template-columns: minmax(280px, 2fr) 3fr;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: var(--s-xl);
   align-items: center;
 }
 .news__item:nth-child(even) {
-  grid-template-columns: 3fr minmax(280px, 2fr);
+  grid-template-columns: minmax(0, 1fr) auto;
 }
 .news__item:nth-child(even) .news__figure { order: 2; }
 .news__figure {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  display: block;
   border-radius: var(--r-md);
   overflow: hidden;
-  background: var(--surface-1);
+  line-height: 0;
 }
 .news__figure img {
   max-width: 100%;
   max-height: 70vh;
   width: auto;
   height: auto;
-  object-fit: contain;
   display: block;
 }
 .news__title {
