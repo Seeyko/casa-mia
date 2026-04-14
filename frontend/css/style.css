@@ -259,11 +259,16 @@ p  { max-width: 70ch; }
   display: grid; gap: var(--s-md);
 }
 .hero__head {
-  display: flex; align-items: center; flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
   gap: clamp(16px, 2.5vw, 32px);
   margin-bottom: var(--s-xs);
 }
-.hero__head-text { display: flex; flex-direction: column; gap: var(--s-xs); }
+.hero__head-text { display: flex; flex-direction: column; gap: var(--s-xs); min-width: 0; }
+@media (max-width: 600px) {
+  .hero__head { grid-template-columns: 1fr; justify-items: start; }
+}
 .hero__logo {
   width: clamp(160px, 16vw, 240px);
   height: auto;
