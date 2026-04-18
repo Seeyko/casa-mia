@@ -825,14 +825,24 @@ p  { max-width: 70ch; }
 .menu-item__add {
   width: 24px; height: 24px;
   border-radius: 50%;
-  border: 1px solid var(--rule-strong);
-  color: var(--ink-3);
+  border: 1px solid var(--gold);
+  background: var(--gold);
+  color: var(--surface-0);
   display: grid; place-items: center;
-  font-size: .85rem; line-height: 1; font-weight: 600;
+  font-size: .9rem; line-height: 1; font-weight: 700;
   pointer-events: none;
   transition: all var(--t-fast);
-  opacity: .45;
+  opacity: 1;
   flex-shrink: 0;
+}
+@media (hover: hover) {
+  .menu-item__add {
+    background: transparent;
+    border-color: var(--rule-strong);
+    color: var(--ink-3);
+    font-weight: 600;
+    opacity: .45;
+  }
 }
 .menu-badge {
   display: inline-block;
