@@ -2,6 +2,7 @@
   'use strict';
 
   const API = window.APP_CONFIG?.API_URL || '';
+  var menuItemsCache = {};
 
   // ===== INIT =====
   document.addEventListener('DOMContentLoaded', function() {
@@ -236,8 +237,10 @@
             html += '</div>';
           } else {
             html += '<div class="menu-list">';
-            cat.items.forEach(function(item) {
-              html += '<article class="menu-item">';
+            cat.items.forEach(function(item, itemIdx) {
+              var mid = 'mi-' + catIdx + '-' + itemIdx;
+              menuItemsCache[mid] = item;
+              html += '<article class="menu-item" data-mid="' + mid + '">';
               if (item.image_path) {
                 html += '<img class="menu-item__img" src="' + API + '/api/images/' + escapeHtml(item.image_path) + '" alt="" loading="lazy">';
               } else {
@@ -250,6 +253,7 @@
               html += '</h3>';
               if (item.description) html += '<p class="menu-item__desc">' + escapeHtml(item.description) + '</p>';
               if (item.note) html += '<p class="menu-item__desc"><em>' + escapeHtml(item.note) + '</em></p>';
+              html += '<button type="button" class="menu-item__more" data-mid="' + mid + '" aria-label="Voir plus de détails sur ' + escapeHtml(item.name) + '">Voir plus <span aria-hidden="true">\u2192</span></button>';
               html += '</div>';
               if (item.price) html += '<span class="menu-item__price price">' + escapeHtml(item.price) + '</span>';
               html += '</article>';
@@ -525,6 +529,99 @@
     renderBadge();
   }
 
+  // ===== ITEM DETAIL SHEET (mobile bottom sheet / desktop modal) =====
+  function initItemSheet() {
+    var sheet = document.getElementById('itemSheet');
+    var backdrop = document.getElementById('itemSheetBackdrop');
+    var closeBtn = document.getElementById('itemSheetClose');
+    var nameEl = document.getElementById('itemSheetName');
+    var priceEl = document.getElementById('itemSheetPrice');
+    var descEl = document.getElementById('itemSheetDesc');
+    var noteEl = document.getElementById('itemSheetNote');
+    var mediaEl = document.getElementById('itemSheetMedia');
+    var addBtn = document.getElementById('itemSheetAdd');
+    if (!sheet || !backdrop) return;
+
+    var currentItem = null;
+
+    function open(item) {
+      if (!item) return;
+      currentItem = item;
+      nameEl.innerHTML = escapeHtml(item.name) +
+        (item.badge === 'NEW' ? ' <span class="menu-badge">Nouveau</span>' : '') +
+        (item.badge === '\u2605' ? ' <span class="menu-badge menu-badge--star">\u2605</span>' : '');
+      if (item.price) {
+        priceEl.textContent = item.price;
+        priceEl.style.display = '';
+      } else {
+        priceEl.style.display = 'none';
+      }
+      if (item.description) {
+        descEl.textContent = item.description;
+        descEl.style.display = '';
+      } else {
+        descEl.style.display = 'none';
+      }
+      if (item.note) {
+        noteEl.innerHTML = '<em>' + escapeHtml(item.note) + '</em>';
+        noteEl.style.display = '';
+      } else {
+        noteEl.style.display = 'none';
+      }
+      if (item.image_path) {
+        mediaEl.innerHTML = '<img src="' + API + '/api/images/' + escapeHtml(item.image_path) + '" alt="' + escapeHtml(item.name) + '">';
+        mediaEl.classList.remove('item-sheet__media--ph');
+      } else {
+        mediaEl.innerHTML = itemIcon('', item.name);
+        mediaEl.classList.add('item-sheet__media--ph');
+      }
+      var price = item.price ? parseFloat(String(item.price).replace(/[^\d,\.]/g, '').replace(',', '.')) : NaN;
+      addBtn.style.display = isNaN(price) ? 'none' : '';
+      sheet.setAttribute('aria-hidden', 'false');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      sheet.setAttribute('aria-hidden', 'true');
+      backdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      currentItem = null;
+    }
+
+    backdrop.addEventListener('click', close);
+    closeBtn.addEventListener('click', close);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && sheet.getAttribute('aria-hidden') === 'false') close();
+    });
+    addBtn.addEventListener('click', function() {
+      if (!currentItem || !currentItem.price) return;
+      var price = parseFloat(String(currentItem.price).replace(/[^\d,\.]/g, '').replace(',', '.'));
+      if (isNaN(price)) return;
+      if (window.addToCart) window.addToCart(currentItem.name, price);
+      close();
+    });
+
+    // Capture phase so that the click on "Voir plus" does not also trigger
+    // the add-to-cart listener attached on the parent .menu-item.
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.menu-item__more');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var mid = btn.getAttribute('data-mid');
+      open(menuItemsCache[mid]);
+    }, true);
+    document.addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var btn = e.target.closest && e.target.closest('.menu-item__more');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var mid = btn.getAttribute('data-mid');
+      open(menuItemsCache[mid]);
+    }, true);
+  }
+
   // Rend les items "carte" cliquables pour ajout panier
   function injectCartButtons() {
     document.querySelectorAll('.menu-item').forEach(function(item) {
@@ -571,6 +668,7 @@
   if (document.getElementById('menuContent')) {
     loadMenu = loadMenuWithCart;
     initCart();
+    initItemSheet();
   }
 
   // Expose for inline use

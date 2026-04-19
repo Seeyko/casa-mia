@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" href="images/logo-casamia.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
 
@@ -156,6 +156,26 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Item Detail Sheet (mobile bottom sheet / desktop modal) -->
+  <div class="item-sheet-backdrop" id="itemSheetBackdrop" aria-hidden="true"></div>
+  <div class="item-sheet" id="itemSheet" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="itemSheetName">
+    <button class="item-sheet__close" id="itemSheetClose" type="button" aria-label="Fermer">×</button>
+    <div class="item-sheet__scroll">
+      <div class="item-sheet__media" id="itemSheetMedia"></div>
+      <div class="item-sheet__body">
+        <div class="item-sheet__head">
+          <h3 class="item-sheet__name" id="itemSheetName"></h3>
+          <span class="item-sheet__price" id="itemSheetPrice"></span>
+        </div>
+        <p class="item-sheet__desc" id="itemSheetDesc"></p>
+        <p class="item-sheet__note" id="itemSheetNote"></p>
+      </div>
+    </div>
+    <div class="item-sheet__footer">
+      <button class="item-sheet__add" id="itemSheetAdd" type="button">Ajouter au panier</button>
     </div>
   </div>
 
