@@ -132,6 +132,7 @@ func main() {
 			// Menu items
 			r.Get("/menu/items", adminHandler.ListItems)
 			r.Post("/menu/items", adminHandler.CreateItem)
+			r.Post("/menu/items/reorder", adminHandler.ReorderItems)
 			r.Put("/menu/items/{id}", adminHandler.UpdateItem)
 			r.Delete("/menu/items/{id}", adminHandler.DeleteItem)
 

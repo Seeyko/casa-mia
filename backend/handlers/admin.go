@@ -289,6 +289,11 @@ func (h *AdminHandler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	badge := r.FormValue("badge")
 	note := r.FormValue("note")
 
+	// Auto-assign at bottom of category when not provided
+	if sortOrder == 0 {
+		h.db.DB.QueryRow(`SELECT COALESCE(MAX(sort_order), 0) + 10 FROM menu_items WHERE category_id = $1`, categoryID).Scan(&sortOrder)
+	}
+
 	var imagePath string
 	if _, _, err := r.FormFile("image"); err == nil {
 		filename, err := h.img.SaveUpload(r, "image", 5<<20)
@@ -353,6 +358,41 @@ func (h *AdminHandler) UpdateItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonResponse(w, map[string]string{"status": "updated"})
+}
+
+func (h *AdminHandler) ReorderItems(w http.ResponseWriter, r *http.Request) {
+	var body struct {
+		Items []struct {
+			ID        int `json:"id"`
+			SortOrder int `json:"sort_order"`
+		} `json:"items"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		jsonError(w, "invalid json", http.StatusBadRequest)
+		return
+	}
+	if len(body.Items) == 0 {
+		jsonResponse(w, map[string]string{"status": "ok"})
+		return
+	}
+
+	tx, err := h.db.DB.Begin()
+	if err != nil {
+		jsonError(w, "database error", http.StatusInternalServerError)
+		return
+	}
+	for _, it := range body.Items {
+		if _, err := tx.Exec(`UPDATE menu_items SET sort_order=$1 WHERE id=$2`, it.SortOrder, it.ID); err != nil {
+			tx.Rollback()
+			jsonError(w, "database error", http.StatusInternalServerError)
+			return
+		}
+	}
+	if err := tx.Commit(); err != nil {
+		jsonError(w, "database error", http.StatusInternalServerError)
+		return
+	}
+	jsonResponse(w, map[string]string{"status": "reordered"})
 }
 
 func (h *AdminHandler) DeleteItem(w http.ResponseWriter, r *http.Request) {
