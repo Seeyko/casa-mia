@@ -106,7 +106,7 @@ func computeStatus(now time.Time, hoursJSON json.RawMessage) (bool, string) {
 			if nowMinutes >= openTime && nowMinutes < closeTime {
 				closeH := closeTime / 60
 				closeM := closeTime % 60
-				return true, fmt.Sprintf("Ferme a %dh%02d", closeH, closeM)
+				return true, fmt.Sprintf("Ferme à %dh%02d", closeH, closeM)
 			}
 		}
 	}
@@ -130,7 +130,7 @@ func findNextOpening(now time.Time, hours models.OpeningHours) string {
 			if openTime > nowMinutes {
 				h := openTime / 60
 				m := openTime % 60
-				return fmt.Sprintf("Ouvre a %dh%02d", h, m)
+				return fmt.Sprintf("Ouvre à %dh%02d", h, m)
 			}
 		}
 	}
@@ -147,7 +147,7 @@ func findNextOpening(now time.Time, hours models.OpeningHours) string {
 			h := openTime / 60
 			m := openTime % 60
 			capitalDay := capitalize(futureDayName)
-			return fmt.Sprintf("Ouvre %s a %dh%02d", capitalDay, h, m)
+			return fmt.Sprintf("Ouvre %s à %dh%02d", capitalDay, h, m)
 		}
 	}
 
