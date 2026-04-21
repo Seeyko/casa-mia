@@ -200,6 +200,124 @@
     .switch input:checked ~ .switch__track::after { transform: translate(18px, -50%); background: var(--gold); }
     .switch input:focus-visible ~ .switch__track { outline: 2px solid var(--gold); outline-offset: 2px; }
 
+    /* Hours panel — 2 pizzerias côte à côte */
+    .hours-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+      gap: 20px;
+    }
+    .hours-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+      padding: clamp(20px, 3vw, 28px);
+      display: flex; flex-direction: column; gap: 22px;
+    }
+    .hours-card__head {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+      padding-bottom: 14px; border-bottom: 1px solid var(--border);
+    }
+    .hours-card__name { font-family: var(--f-display); font-size: 1.5rem; color: var(--text); }
+    .hours-card__slug { font-size: .7rem; color: var(--text2); letter-spacing: 0.14em; text-transform: uppercase; }
+    .hours-section__title {
+      font-size: .7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text2); margin-bottom: 10px;
+    }
+    .hours-section__help { font-size: .8rem; color: var(--text2); margin-bottom: 12px; line-height: 1.5; }
+    .hours-day-row {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 10px;
+      align-items: start;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .hours-day-row:last-child { border-bottom: none; }
+    .hours-day-row__name {
+      font-weight: 600; text-transform: uppercase;
+      font-size: .75rem; letter-spacing: 0.08em;
+      color: var(--text2); padding-top: 8px;
+    }
+    .hours-day-row__name.is-active { color: var(--gold); }
+    .hours-slots { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .hours-slot { display: flex; align-items: center; gap: 6px; }
+    .hours-slot input {
+      width: 60px; padding: 6px 8px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--text); font-size: .8125rem; font-family: inherit;
+      text-align: center;
+    }
+    .hours-slot input:focus { outline: none; border-color: var(--gold); }
+    .hours-slot__sep { color: var(--text2); font-size: .8125rem; }
+    .hours-slot__remove {
+      width: 26px; height: 26px; display: grid; place-items: center;
+      background: none; border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--text2); cursor: pointer; font-size: 1rem; line-height: 1;
+      flex-shrink: 0;
+    }
+    .hours-slot__remove:hover { color: var(--red); border-color: var(--red); }
+    .hours-day-row__actions {
+      display: flex; flex-direction: column; gap: 4px; align-items: flex-end;
+      padding-top: 2px;
+    }
+    .hours-day-closed {
+      color: var(--text2); font-style: italic; font-size: .8125rem;
+      padding: 8px 0;
+    }
+    .hours-add-slot {
+      background: none; border: 1px dashed var(--border); border-radius: var(--radius);
+      color: var(--text2); padding: 5px 10px; font-size: .7rem; cursor: pointer;
+      font-family: inherit; letter-spacing: 0.04em; white-space: nowrap;
+    }
+    .hours-add-slot:hover { color: var(--gold); border-color: var(--gold); }
+    .hours-closed-toggle {
+      background: none; border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--text2); padding: 5px 10px; font-size: .7rem; cursor: pointer;
+      font-family: inherit; letter-spacing: 0.04em; white-space: nowrap;
+    }
+    .hours-closed-toggle:hover { color: var(--text); }
+    .hours-closed-toggle.is-active { color: var(--red); border-color: var(--red); }
+
+    .closure-box {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px;
+    }
+    .closure-box.is-active { border-color: oklch(60% 0.170 28 / .5); background: oklch(60% 0.170 28 / .05); }
+    .closure-box__fields {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-top: 14px;
+    }
+    .closure-box__fields .form-group--full { grid-column: 1 / -1; }
+    .closure-box input[type="date"],
+    .closure-box textarea {
+      width: 100%; padding: 9px 12px;
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--text); font-size: .875rem; font-family: inherit;
+    }
+    .closure-box input[type="date"]:focus,
+    .closure-box textarea:focus { outline: none; border-color: var(--gold); }
+    .closure-box textarea { resize: vertical; min-height: 64px; }
+    .closure-box__preview {
+      margin-top: 12px; padding: 10px 12px;
+      border-left: 2px solid var(--red); background: oklch(60% 0.170 28 / .08);
+      font-size: .85rem; color: var(--text); border-radius: 0 var(--radius) var(--radius) 0;
+      display: none;
+    }
+    .closure-box.is-active .closure-box__preview { display: block; }
+
+    .hours-card__footer {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hours-card__status { font-size: .8125rem; color: var(--text2); min-height: 1em; }
+    .hours-card__status.is-ok { color: var(--green); }
+    .hours-card__status.is-err { color: var(--red); }
+
+    @media (max-width: 520px) {
+      .hours-day-row { grid-template-columns: 48px 1fr; }
+      .hours-day-row__actions { grid-column: 2; align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+      .closure-box__fields { grid-template-columns: 1fr; }
+      .hours-slot input { width: 56px; }
+    }
+
     /* Settings card — plus grande */
     .settings-card {
       max-width: 560px;
@@ -268,6 +386,7 @@
   <div class="tabs">
     <button class="tab active" data-tab="news" onclick="switchTab(this, 'news')">Actualités</button>
     <button class="tab" data-tab="menu" onclick="switchTab(this, 'menu')">Carte &amp; Menus</button>
+    <button class="tab" data-tab="hours" onclick="switchTab(this, 'hours')">Horaires</button>
     <button class="tab" data-tab="settings" onclick="switchTab(this, 'settings')">Paramètres</button>
   </div>
 
@@ -294,6 +413,17 @@
 
   <div id="reorderToast" class="reorder-toast" role="status" aria-live="polite">
     <span class="reorder-toast__dot"></span><span id="reorderToastMsg">Ordre enregistré</span>
+  </div>
+
+  <!-- Hours Panel -->
+  <div id="panel-hours" class="panel">
+    <p class="menu-hint" style="margin-bottom:16px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Format d'heure : <code style="color:var(--text);">9h</code>, <code style="color:var(--text);">9h30</code>, <code style="color:var(--text);">21h30</code>. Les modifications s'appliquent instantanément sur le site après enregistrement.
+    </p>
+    <div id="hoursGrid" class="hours-grid">
+      <p style="color:var(--text2);">Chargement…</p>
+    </div>
   </div>
 
   <!-- Settings Panel -->
@@ -468,6 +598,7 @@ function fetchCategories() {
 function loadAll() {
   fetchCategories().then(function() { loadCategoryFilter(); loadItems(); });
   loadNews();
+  loadHours();
 }
 
 // ===== NEWS =====
@@ -821,6 +952,298 @@ function saveItem(id) {
 function deleteItem(id) {
   if (!confirm('Supprimer cet item ?')) return;
   adminFetch('/menu/items/' + id, { method: 'DELETE' }).then(function() { loadItems(); });
+}
+
+// ===== HOURS =====
+var DAYS = [
+  { key: 'lundi',    label: 'Lun' },
+  { key: 'mardi',    label: 'Mar' },
+  { key: 'mercredi', label: 'Mer' },
+  { key: 'jeudi',    label: 'Jeu' },
+  { key: 'vendredi', label: 'Ven' },
+  { key: 'samedi',   label: 'Sam' },
+  { key: 'dimanche', label: 'Dim' }
+];
+
+// Local draft state for the hours panel (keyed by location id).
+var HOURS_STATE = {};
+
+function loadHours() {
+  var el = document.getElementById('hoursGrid');
+  if (!el) return;
+  fetch(API + '/locations')
+    .then(function(r) { return r.json(); })
+    .then(function(locations) {
+      HOURS_STATE = {};
+      (locations || []).forEach(function(loc) {
+        var parsed = {};
+        try {
+          parsed = typeof loc.opening_hours === 'string'
+            ? JSON.parse(loc.opening_hours)
+            : (loc.opening_hours || {});
+        } catch(e) { parsed = {}; }
+        HOURS_STATE[loc.id] = {
+          id: loc.id,
+          name: loc.name,
+          slug: loc.slug,
+          hours: normalizeHours(parsed),
+          closure_start: loc.closure_start || '',
+          closure_end: loc.closure_end || '',
+          closure_message: loc.closure_message || ''
+        };
+      });
+      renderHoursPanel();
+    })
+    .catch(function() {
+      el.innerHTML = '<p style="color:var(--red);">Impossible de charger les horaires.</p>';
+    });
+}
+
+function normalizeHours(h) {
+  var out = {};
+  DAYS.forEach(function(d) {
+    var dh = h ? h[d.key] : null;
+    if (dh && dh.slots && dh.slots.length) {
+      out[d.key] = { slots: dh.slots.map(function(s) { return { open: s.open || '', close: s.close || '' }; }) };
+    } else {
+      out[d.key] = null;
+    }
+  });
+  return out;
+}
+
+function renderHoursPanel() {
+  var el = document.getElementById('hoursGrid');
+  if (!el) return;
+  var ids = Object.keys(HOURS_STATE);
+  if (!ids.length) {
+    el.innerHTML = '<p style="color:var(--text2);">Aucune pizzeria à afficher.</p>';
+    return;
+  }
+  el.innerHTML = ids.map(function(id) { return renderHoursCard(HOURS_STATE[id]); }).join('');
+}
+
+function renderHoursCard(loc) {
+  var todayIdx = (new Date().getDay() + 6) % 7; // 0=Mon
+  var daysHtml = DAYS.map(function(d, i) {
+    var dh = loc.hours[d.key];
+    var isActive = i === todayIdx ? ' is-active' : '';
+    var slotsHtml;
+    if (!dh) {
+      slotsHtml = '<div class="hours-day-closed">Fermé ce jour</div>';
+    } else {
+      slotsHtml = '<div class="hours-slots">' + dh.slots.map(function(s, idx) {
+        return '<div class="hours-slot">' +
+          '<input type="text" value="' + esc(s.open) + '" placeholder="9h" ' +
+            'oninput="updateSlot(' + loc.id + ',\'' + d.key + '\',' + idx + ',\'open\',this.value)">' +
+          '<span class="hours-slot__sep">–</span>' +
+          '<input type="text" value="' + esc(s.close) + '" placeholder="13h" ' +
+            'oninput="updateSlot(' + loc.id + ',\'' + d.key + '\',' + idx + ',\'close\',this.value)">' +
+          '<button type="button" class="hours-slot__remove" title="Supprimer ce créneau" ' +
+            'onclick="removeSlot(' + loc.id + ',\'' + d.key + '\',' + idx + ')">×</button>' +
+        '</div>';
+      }).join('') + '</div>';
+    }
+    var actions = '<div class="hours-day-row__actions">' +
+      (dh
+        ? '<button type="button" class="hours-add-slot" onclick="addSlot(' + loc.id + ',\'' + d.key + '\')">+ créneau</button>' +
+          '<button type="button" class="hours-closed-toggle is-active" onclick="toggleDayClosed(' + loc.id + ',\'' + d.key + '\')">Fermer</button>'
+        : '<button type="button" class="hours-closed-toggle" onclick="toggleDayClosed(' + loc.id + ',\'' + d.key + '\')">Ouvrir</button>'
+      ) + '</div>';
+    return '<div class="hours-day-row">' +
+      '<div class="hours-day-row__name' + isActive + '">' + d.label + '</div>' +
+      slotsHtml +
+      actions +
+    '</div>';
+  }).join('');
+
+  var isClosureActive = !!(loc.closure_start && loc.closure_end);
+  var preview = buildClosurePreview(loc);
+
+  return '<section class="hours-card" data-loc-id="' + loc.id + '">' +
+    '<header class="hours-card__head">' +
+      '<h2 class="hours-card__name">' + esc(loc.name) + '</h2>' +
+      '<span class="hours-card__slug">' + esc(loc.slug) + '</span>' +
+    '</header>' +
+
+    '<div>' +
+      '<div class="hours-section__title">Horaires hebdomadaires</div>' +
+      '<p class="hours-section__help">Ajoutez un ou plusieurs créneaux par jour. Format : <code style="color:var(--text);">9h</code>, <code style="color:var(--text);">13h30</code>.</p>' +
+      '<div>' + daysHtml + '</div>' +
+    '</div>' +
+
+    '<div class="closure-box' + (isClosureActive ? ' is-active' : '') + '" id="closure-box-' + loc.id + '">' +
+      '<div class="hours-section__title">Fermeture exceptionnelle / Vacances</div>' +
+      '<p class="hours-section__help">Renseignez une période pour marquer la pizzeria comme fermée (vacances, jour férié, imprévu…). Les dates sont incluses.</p>' +
+      '<div class="closure-box__fields">' +
+        '<div class="form-group"><label>Début</label>' +
+          '<input type="date" value="' + esc(loc.closure_start || '') + '" ' +
+            'onchange="updateClosure(' + loc.id + ',\'closure_start\',this.value)"></div>' +
+        '<div class="form-group"><label>Fin</label>' +
+          '<input type="date" value="' + esc(loc.closure_end || '') + '" ' +
+            'onchange="updateClosure(' + loc.id + ',\'closure_end\',this.value)"></div>' +
+        '<div class="form-group form-group--full" style="grid-column:1 / -1;"><label>Message affiché (optionnel)</label>' +
+          '<textarea placeholder="Ex: En vacances jusqu\'au 31 juillet — à très vite !" ' +
+            'oninput="updateClosure(' + loc.id + ',\'closure_message\',this.value)">' + esc(loc.closure_message || '') + '</textarea></div>' +
+      '</div>' +
+      '<div class="closure-box__preview" id="closure-preview-' + loc.id + '">' + preview + '</div>' +
+      '<div style="margin-top:12px;">' +
+        '<button type="button" class="btn btn-danger btn-sm" onclick="clearClosure(' + loc.id + ')">Effacer la période</button>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="hours-card__footer">' +
+      '<span class="hours-card__status" id="hours-status-' + loc.id + '"></span>' +
+      '<button type="button" class="btn btn-primary" onclick="saveHours(' + loc.id + ')">Enregistrer</button>' +
+    '</div>' +
+  '</section>';
+}
+
+function buildClosurePreview(loc) {
+  if (!loc.closure_start || !loc.closure_end) return '';
+  var endFr = formatDateFr(loc.closure_end);
+  var base = loc.closure_message && loc.closure_message.trim()
+    ? esc(loc.closure_message.trim())
+    : 'En vacances jusqu\'au ' + endFr;
+  return '<strong>Aperçu :</strong> ' + esc(loc.name.split('-')[0].trim()) + ' : ' + base;
+}
+
+function formatDateFr(iso) {
+  // "2026-04-30" -> "30/04"
+  if (!iso) return '';
+  var parts = iso.split('-');
+  if (parts.length < 3) return iso;
+  return parts[2] + '/' + parts[1];
+}
+
+function updateSlot(locId, dayKey, slotIdx, field, value) {
+  var s = HOURS_STATE[locId];
+  if (!s || !s.hours[dayKey] || !s.hours[dayKey].slots[slotIdx]) return;
+  s.hours[dayKey].slots[slotIdx][field] = value;
+}
+
+function addSlot(locId, dayKey) {
+  var s = HOURS_STATE[locId];
+  if (!s) return;
+  if (!s.hours[dayKey]) s.hours[dayKey] = { slots: [] };
+  s.hours[dayKey].slots.push({ open: '', close: '' });
+  renderHoursPanel();
+}
+
+function removeSlot(locId, dayKey, slotIdx) {
+  var s = HOURS_STATE[locId];
+  if (!s || !s.hours[dayKey]) return;
+  s.hours[dayKey].slots.splice(slotIdx, 1);
+  if (!s.hours[dayKey].slots.length) s.hours[dayKey] = null;
+  renderHoursPanel();
+}
+
+function toggleDayClosed(locId, dayKey) {
+  var s = HOURS_STATE[locId];
+  if (!s) return;
+  if (s.hours[dayKey]) {
+    s.hours[dayKey] = null;
+  } else {
+    s.hours[dayKey] = { slots: [{ open: '', close: '' }] };
+  }
+  renderHoursPanel();
+}
+
+function updateClosure(locId, field, value) {
+  var s = HOURS_STATE[locId];
+  if (!s) return;
+  s[field] = value;
+  var box = document.getElementById('closure-box-' + locId);
+  var preview = document.getElementById('closure-preview-' + locId);
+  if (box) box.classList.toggle('is-active', !!(s.closure_start && s.closure_end));
+  if (preview) preview.innerHTML = buildClosurePreview(s);
+}
+
+function clearClosure(locId) {
+  var s = HOURS_STATE[locId];
+  if (!s) return;
+  s.closure_start = '';
+  s.closure_end = '';
+  s.closure_message = '';
+  renderHoursPanel();
+}
+
+function saveHours(locId) {
+  var s = HOURS_STATE[locId];
+  if (!s) return;
+  var statusEl = document.getElementById('hours-status-' + locId);
+  statusEl.className = 'hours-card__status';
+  statusEl.textContent = 'Enregistrement…';
+
+  // Validation côté client : les deux dates doivent être cohérentes
+  if ((s.closure_start && !s.closure_end) || (!s.closure_start && s.closure_end)) {
+    statusEl.className = 'hours-card__status is-err';
+    statusEl.textContent = 'Renseignez la date de début ET de fin (ou effacez la période).';
+    return;
+  }
+  if (s.closure_start && s.closure_end && s.closure_start > s.closure_end) {
+    statusEl.className = 'hours-card__status is-err';
+    statusEl.textContent = 'La date de début doit précéder la date de fin.';
+    return;
+  }
+
+  // Construit le payload jour par jour. Un jour "ouvert" sans créneau rempli
+  // est une erreur explicite (évite le piège "Ouvrir" silencieusement perdu).
+  var HOUR_RE = /^(?:[01]?\d|2[0-3])h(?:[0-5]\d)?$/;
+  var payloadHours = {};
+  var slotError = null;
+  DAYS.forEach(function(d) {
+    if (slotError) return;
+    var dh = s.hours[d.key];
+    if (!dh) { payloadHours[d.key] = null; return; }
+    var valid = [];
+    for (var i = 0; i < dh.slots.length; i++) {
+      var sl = dh.slots[i];
+      var hasOpen = !!sl.open, hasClose = !!sl.close;
+      if (!hasOpen && !hasClose) continue; // ligne vierge ignorée
+      if (!hasOpen || !hasClose || !HOUR_RE.test(sl.open) || !HOUR_RE.test(sl.close)) {
+        slotError = { day: d.key, kind: 'format' };
+        return;
+      }
+      valid.push({ open: sl.open, close: sl.close });
+    }
+    if (!valid.length) {
+      slotError = { day: d.key, kind: 'empty' };
+      return;
+    }
+    payloadHours[d.key] = { slots: valid };
+  });
+  if (slotError) {
+    statusEl.className = 'hours-card__status is-err';
+    statusEl.textContent = slotError.kind === 'empty'
+      ? 'Le jour ' + slotError.day + ' est ouvert mais sans créneau rempli. Remplissez-le ou cliquez sur « Fermer ».'
+      : 'Format d\'heure invalide (ex: 9h, 13h30) pour ' + slotError.day + '.';
+    return;
+  }
+
+  var body = {
+    opening_hours: payloadHours,
+    closure_start: s.closure_start || '',
+    closure_end: s.closure_end || '',
+    closure_message: s.closure_message || ''
+  };
+
+  adminFetch('/locations/' + locId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  })
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+    .then(function(res) {
+      if (!res.ok) throw new Error(res.data.error || 'Erreur');
+      statusEl.className = 'hours-card__status is-ok';
+      statusEl.textContent = 'Enregistré ✓';
+      setTimeout(function() { if (statusEl.textContent === 'Enregistré ✓') statusEl.textContent = ''; }, 2500);
+    })
+    .catch(function(e) {
+      statusEl.className = 'hours-card__status is-err';
+      statusEl.textContent = 'Erreur : ' + e.message;
+    });
 }
 
 // ===== HELPERS =====

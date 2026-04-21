@@ -86,6 +86,12 @@
   }
 
   // ===== STATUS (open/closed) =====
+  function shortCityName(name) {
+    // "Entraigues-sur-la-Sorgue" -> "Entraigues", "Althen-des-Paluds" -> "Althen"
+    if (!name) return '';
+    return name.split('-')[0].trim();
+  }
+
   function loadStatus() {
     fetch(API + '/api/status')
       .then(function(r) { return r.json(); })
@@ -93,15 +99,31 @@
         var container = document.getElementById('statusBadges');
         if (!container) return;
         container.innerHTML = statuses.map(function(s, i) {
-          var cls = s.is_open ? 'status--open' : 'status--closed';
-          var label = s.is_open ? 'Ouvert' : 'Fermé';
+          var cls;
+          var label;
+          var note;
+          if (s.is_on_vacation) {
+            cls = 'status--vacation';
+            label = 'En vacances';
+            if (s.closure_message) {
+              note = s.closure_message;
+            } else if (s.closure_until) {
+              note = 'jusqu\'au ' + s.closure_until;
+            } else {
+              note = '';
+            }
+          } else {
+            cls = s.is_open ? 'status--open' : 'status--closed';
+            label = s.is_open ? 'Ouvert' : 'Fermé';
+            note = s.next_change || '';
+          }
           var sep = i > 0 ? '<span class="hero__meta-sep" aria-hidden="true">·</span>' : '';
           return sep +
             '<span class="status ' + cls + '">' +
               '<span class="status__dot" aria-hidden="true"></span>' +
-              '<span class="status__label">' + escapeHtml(s.name) + '</span>' +
+              '<span class="status__label">' + escapeHtml(shortCityName(s.name)) + '</span>' +
               '<span class="status__note">— ' + label +
-                (s.next_change ? ' · ' + escapeHtml(s.next_change) : '') +
+                (note ? ' · ' + escapeHtml(note) : '') +
               '</span>' +
             '</span>';
         }).join('');
@@ -145,9 +167,13 @@
         var container = document.getElementById('locationsGrid');
         if (!container) return;
         var todayIdx = (new Date().getDay() + 6) % 7;
+        // today-as-ISO string in Europe/Paris — aligne le front sur le même fuseau
+        // que le backend pour éviter un décalage d'1 jour autour de minuit.
+        var todayIso = parisTodayIso();
         container.innerHTML = locations.map(function(loc) {
           return '<div class="addr reveal">' +
             '<h3 class="addr__name">' + escapeHtml(loc.name) + '</h3>' +
+            renderClosureBanner(loc, todayIso) +
             '<p class="addr__street">' + escapeHtml(loc.address) + '</p>' +
             '<a href="tel:' + loc.phone.replace(/\s/g, '') + '" class="addr__phone">' + escapeHtml(loc.phone) + '</a>' +
             renderHours(loc.opening_hours, todayIdx) +
@@ -156,6 +182,45 @@
         initFadeIn();
       })
       .catch(function() {});
+  }
+
+  function parisTodayIso() {
+    try {
+      var parts = new Intl.DateTimeFormat('fr-CA', {
+        timeZone: 'Europe/Paris',
+        year: 'numeric', month: '2-digit', day: '2-digit'
+      }).format(new Date());
+      // fr-CA renvoie "YYYY-MM-DD"
+      if (/^\d{4}-\d{2}-\d{2}$/.test(parts)) return parts;
+    } catch (e) {}
+    var d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  function isoToDdMm(iso) {
+    // "2026-04-30" -> "30/04"
+    var parts = iso.split('-');
+    return parts.length === 3 ? parts[2] + '/' + parts[1] : iso;
+  }
+
+  function renderClosureBanner(loc, todayIso) {
+    if (!loc.closure_start || !loc.closure_end) return '';
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(loc.closure_start) || !/^\d{4}-\d{2}-\d{2}$/.test(loc.closure_end)) return '';
+    // Comparaison lexicographique sûre sur YYYY-MM-DD.
+    if (todayIso > loc.closure_end) return '';
+    var isActive = todayIso >= loc.closure_start && todayIso <= loc.closure_end;
+    var endFr = isoToDdMm(loc.closure_end);
+    var startFr = isoToDdMm(loc.closure_start);
+    var title = isActive ? 'Fermeture exceptionnelle' : 'Fermeture à venir';
+    var dateLine = isActive ? 'Jusqu\'au ' + endFr : 'Du ' + startFr + ' au ' + endFr;
+    var msg = loc.closure_message ? '<p class="addr__closure-msg">' + escapeHtml(loc.closure_message) + '</p>' : '';
+    return '<div class="addr__closure' + (isActive ? ' addr__closure--active' : '') + '" role="note">' +
+      '<span class="addr__closure-title">' + title + '</span>' +
+      '<span class="addr__closure-dates">' + escapeHtml(dateLine) + '</span>' +
+      msg +
+    '</div>';
   }
 
   function renderHours(hoursObj, todayIdx) {

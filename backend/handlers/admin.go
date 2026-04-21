@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -412,6 +414,8 @@ func (h *AdminHandler) DeleteItem(w http.ResponseWriter, r *http.Request) {
 
 // === LOCATIONS ===
 
+const maxClosureMessageLen = 500
+
 func (h *AdminHandler) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -420,21 +424,112 @@ func (h *AdminHandler) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var body struct {
-		Name         string          `json:"name"`
-		Address      string          `json:"address"`
-		Phone        string          `json:"phone"`
-		OpeningHours json.RawMessage `json:"opening_hours"`
-		OrderMethod  string          `json:"order_method"`
-		OrderInfo    string          `json:"order_info"`
+		Name           *string         `json:"name"`
+		Address        *string         `json:"address"`
+		Phone          *string         `json:"phone"`
+		OpeningHours   json.RawMessage `json:"opening_hours"`
+		OrderMethod    *string         `json:"order_method"`
+		OrderInfo      *string         `json:"order_info"`
+		ClosureStart   *string         `json:"closure_start"`   // "YYYY-MM-DD" or "" / null to clear
+		ClosureEnd     *string         `json:"closure_end"`     // "YYYY-MM-DD" or "" / null to clear
+		ClosureMessage *string         `json:"closure_message"` // free-form admin note
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		jsonError(w, "invalid json", http.StatusBadRequest)
 		return
 	}
 
-	h.db.DB.Exec(`UPDATE locations SET name=$1, address=$2, phone=$3, opening_hours=$4, order_method=$5, order_info=$6, updated_at=CURRENT_TIMESTAMP WHERE id=$7`,
-		body.Name, body.Address, body.Phone, body.OpeningHours, body.OrderMethod, body.OrderInfo, id)
+	// Load current values so partial updates don't wipe unrelated fields.
+	var curName, curAddress, curPhone, curOrderMethod, curOrderInfo, curClosureMessage string
+	var curOpening []byte
+	var curClosureStart, curClosureEnd sql.NullTime
+	err = h.db.DB.QueryRow(`SELECT name, address, phone, opening_hours, order_method, order_info,
+		closure_message, closure_start, closure_end FROM locations WHERE id=$1`, id).
+		Scan(&curName, &curAddress, &curPhone, &curOpening, &curOrderMethod, &curOrderInfo,
+			&curClosureMessage, &curClosureStart, &curClosureEnd)
+	if err != nil {
+		jsonError(w, "location not found", http.StatusNotFound)
+		return
+	}
+
+	name := curName
+	if body.Name != nil {
+		name = *body.Name
+	}
+	address := curAddress
+	if body.Address != nil {
+		address = *body.Address
+	}
+	phone := curPhone
+	if body.Phone != nil {
+		phone = *body.Phone
+	}
+	opening := curOpening
+	if len(body.OpeningHours) > 0 {
+		opening = body.OpeningHours
+	}
+	orderMethod := curOrderMethod
+	if body.OrderMethod != nil {
+		orderMethod = *body.OrderMethod
+	}
+	orderInfo := curOrderInfo
+	if body.OrderInfo != nil {
+		orderInfo = *body.OrderInfo
+	}
+	closureMessage := curClosureMessage
+	if body.ClosureMessage != nil {
+		closureMessage = *body.ClosureMessage
+	}
+	if len(closureMessage) > maxClosureMessageLen {
+		jsonError(w, "closure_message too long (max 500)", http.StatusBadRequest)
+		return
+	}
+
+	// Closure dates: accept "" or null to clear; otherwise expect "YYYY-MM-DD".
+	// When the field is omitted from the payload we keep the stored value.
+	closureStart, err := resolveClosureDate(body.ClosureStart, curClosureStart, "closure_start")
+	if err != nil {
+		jsonError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	closureEnd, err := resolveClosureDate(body.ClosureEnd, curClosureEnd, "closure_end")
+	if err != nil {
+		jsonError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	_, err = h.db.DB.Exec(`UPDATE locations
+		SET name=$1, address=$2, phone=$3, opening_hours=$4, order_method=$5, order_info=$6,
+		    closure_start=$7, closure_end=$8, closure_message=$9,
+		    updated_at=CURRENT_TIMESTAMP
+		WHERE id=$10`,
+		name, address, phone, opening, orderMethod, orderInfo,
+		closureStart, closureEnd, closureMessage, id)
+	if err != nil {
+		jsonError(w, "database error", http.StatusInternalServerError)
+		return
+	}
 	jsonResponse(w, map[string]string{"status": "updated"})
+}
+
+// resolveClosureDate picks the effective value for a nullable DATE column:
+//   - body pointer nil       -> keep DB value
+//   - body pointer to ""     -> clear (NULL)
+//   - body pointer to "YYYY-MM-DD" -> set (validated)
+func resolveClosureDate(body *string, current sql.NullTime, field string) (interface{}, error) {
+	if body == nil {
+		if current.Valid {
+			return current.Time.Format("2006-01-02"), nil
+		}
+		return nil, nil
+	}
+	if *body == "" {
+		return nil, nil
+	}
+	if _, err := time.Parse("2006-01-02", *body); err != nil {
+		return nil, fmt.Errorf("%s: expected YYYY-MM-DD", field)
+	}
+	return *body, nil
 }
 
 // === Helpers ===

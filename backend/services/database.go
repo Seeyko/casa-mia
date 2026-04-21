@@ -100,6 +100,10 @@ func (d *Database) migrate() error {
 	CREATE INDEX IF NOT EXISTS idx_menu_items_category ON menu_items(category_id);
 	CREATE INDEX IF NOT EXISTS idx_menu_categories_section ON menu_categories(section);
 	CREATE INDEX IF NOT EXISTS idx_news_published ON news(published);
+
+	ALTER TABLE locations ADD COLUMN IF NOT EXISTS closure_start   DATE;
+	ALTER TABLE locations ADD COLUMN IF NOT EXISTS closure_end     DATE;
+	ALTER TABLE locations ADD COLUMN IF NOT EXISTS closure_message TEXT NOT NULL DEFAULT '';
 	`
 
 	_, err := d.DB.Exec(schema)

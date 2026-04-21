@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -19,7 +20,7 @@ func NewLocationHandler(db *services.Database) *LocationHandler {
 }
 
 func (h *LocationHandler) List(w http.ResponseWriter, r *http.Request) {
-	rows, err := h.db.DB.Query(`SELECT id, name, slug, address, phone, opening_hours, order_method, order_info, created_at, updated_at FROM locations ORDER BY id`)
+	rows, err := h.db.DB.Query(`SELECT id, name, slug, address, phone, opening_hours, order_method, order_info, closure_start, closure_end, closure_message, created_at, updated_at FROM locations ORDER BY id`)
 	if err != nil {
 		http.Error(w, `{"error":"database error"}`, http.StatusInternalServerError)
 		return
@@ -29,9 +30,17 @@ func (h *LocationHandler) List(w http.ResponseWriter, r *http.Request) {
 	var locations []models.Location
 	for rows.Next() {
 		var loc models.Location
-		var orderMethod, orderInfo string
-		if err := rows.Scan(&loc.ID, &loc.Name, &loc.Slug, &loc.Address, &loc.Phone, &loc.OpeningHours, &orderMethod, &orderInfo, &loc.CreatedAt, &loc.UpdatedAt); err != nil {
+		var closureStart, closureEnd sql.NullTime
+		if err := rows.Scan(&loc.ID, &loc.Name, &loc.Slug, &loc.Address, &loc.Phone, &loc.OpeningHours, &loc.OrderMethod, &loc.OrderInfo, &closureStart, &closureEnd, &loc.ClosureMessage, &loc.CreatedAt, &loc.UpdatedAt); err != nil {
 			continue
+		}
+		if closureStart.Valid {
+			s := closureStart.Time.Format("2006-01-02")
+			loc.ClosureStart = &s
+		}
+		if closureEnd.Valid {
+			s := closureEnd.Time.Format("2006-01-02")
+			loc.ClosureEnd = &s
 		}
 		locations = append(locations, loc)
 	}
@@ -45,7 +54,7 @@ func (h *LocationHandler) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *LocationHandler) Status(w http.ResponseWriter, r *http.Request) {
-	rows, err := h.db.DB.Query(`SELECT id, name, slug, opening_hours FROM locations ORDER BY id`)
+	rows, err := h.db.DB.Query(`SELECT id, name, slug, opening_hours, closure_start, closure_end, closure_message FROM locations ORDER BY id`)
 	if err != nil {
 		http.Error(w, `{"error":"database error"}`, http.StatusInternalServerError)
 		return
@@ -54,24 +63,39 @@ func (h *LocationHandler) Status(w http.ResponseWriter, r *http.Request) {
 
 	loc, _ := time.LoadLocation("Europe/Paris")
 	now := time.Now().In(loc)
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc)
 
 	var statuses []models.LocationStatus
 	for rows.Next() {
 		var id int
-		var name, slug string
+		var name, slug, closureMessage string
 		var hoursJSON json.RawMessage
-		if err := rows.Scan(&id, &name, &slug, &hoursJSON); err != nil {
+		var closureStart, closureEnd sql.NullTime
+		if err := rows.Scan(&id, &name, &slug, &hoursJSON, &closureStart, &closureEnd, &closureMessage); err != nil {
 			continue
 		}
 
-		isOpen, nextChange := computeStatus(now, hoursJSON)
-		statuses = append(statuses, models.LocationStatus{
-			ID:         id,
-			Name:       name,
-			Slug:       slug,
-			IsOpen:     isOpen,
-			NextChange: nextChange,
-		})
+		status := models.LocationStatus{ID: id, Name: name, Slug: slug}
+
+		// Vacation / exceptional closure takes priority over weekly hours
+		if closureStart.Valid && closureEnd.Valid &&
+			!today.Before(closureStart.Time) && !today.After(closureEnd.Time) {
+			status.IsOpen = false
+			status.IsOnVacation = true
+			status.ClosureMessage = closureMessage
+			status.ClosureUntil = closureEnd.Time.Format("02/01")
+			if closureMessage != "" {
+				status.NextChange = closureMessage
+			} else {
+				status.NextChange = "En vacances jusqu'au " + status.ClosureUntil
+			}
+		} else {
+			isOpen, nextChange := computeStatus(now, hoursJSON)
+			status.IsOpen = isOpen
+			status.NextChange = nextChange
+		}
+
+		statuses = append(statuses, status)
 	}
 
 	if statuses == nil {
@@ -158,10 +182,10 @@ func parseTime(s string) (int, error) {
 	// Parse "9h", "9h00", "13h30", "18h00", "21h30"
 	var h, m int
 	n, _ := fmt.Sscanf(s, "%dh%d", &h, &m)
-	if n >= 1 {
-		return h*60 + m, nil
+	if n < 1 || h < 0 || h > 23 || m < 0 || m > 59 {
+		return 0, fmt.Errorf("invalid time: %s", s)
 	}
-	return 0, fmt.Errorf("invalid time: %s", s)
+	return h*60 + m, nil
 }
 
 func capitalize(s string) string {
