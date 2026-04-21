@@ -86,6 +86,12 @@
   }
 
   // ===== STATUS (open/closed) =====
+  function shortCityName(name) {
+    // "Entraigues-sur-la-Sorgue" -> "Entraigues", "Althen-des-Paluds" -> "Althen"
+    if (!name) return '';
+    return name.split('-')[0].trim();
+  }
+
   function loadStatus() {
     fetch(API + '/api/status')
       .then(function(r) { return r.json(); })
@@ -93,15 +99,31 @@
         var container = document.getElementById('statusBadges');
         if (!container) return;
         container.innerHTML = statuses.map(function(s, i) {
-          var cls = s.is_open ? 'status--open' : 'status--closed';
-          var label = s.is_open ? 'Ouvert' : 'Fermé';
+          var cls;
+          var label;
+          var note;
+          if (s.is_on_vacation) {
+            cls = 'status--vacation';
+            label = 'En vacances';
+            if (s.closure_message) {
+              note = s.closure_message;
+            } else if (s.closure_until) {
+              note = 'jusqu\'au ' + s.closure_until;
+            } else {
+              note = '';
+            }
+          } else {
+            cls = s.is_open ? 'status--open' : 'status--closed';
+            label = s.is_open ? 'Ouvert' : 'Fermé';
+            note = s.next_change || '';
+          }
           var sep = i > 0 ? '<span class="hero__meta-sep" aria-hidden="true">·</span>' : '';
           return sep +
             '<span class="status ' + cls + '">' +
               '<span class="status__dot" aria-hidden="true"></span>' +
-              '<span class="status__label">' + escapeHtml(s.name) + '</span>' +
+              '<span class="status__label">' + escapeHtml(shortCityName(s.name)) + '</span>' +
               '<span class="status__note">— ' + label +
-                (s.next_change ? ' · ' + escapeHtml(s.next_change) : '') +
+                (note ? ' · ' + escapeHtml(note) : '') +
               '</span>' +
             '</span>';
         }).join('');
@@ -145,9 +167,11 @@
         var container = document.getElementById('locationsGrid');
         if (!container) return;
         var todayIdx = (new Date().getDay() + 6) % 7;
+        var today = new Date(); today.setHours(0, 0, 0, 0);
         container.innerHTML = locations.map(function(loc) {
           return '<div class="addr reveal">' +
             '<h3 class="addr__name">' + escapeHtml(loc.name) + '</h3>' +
+            renderClosureBanner(loc, today) +
             '<p class="addr__street">' + escapeHtml(loc.address) + '</p>' +
             '<a href="tel:' + loc.phone.replace(/\s/g, '') + '" class="addr__phone">' + escapeHtml(loc.phone) + '</a>' +
             renderHours(loc.opening_hours, todayIdx) +
@@ -156,6 +180,28 @@
         initFadeIn();
       })
       .catch(function() {});
+  }
+
+  function renderClosureBanner(loc, today) {
+    if (!loc.closure_start || !loc.closure_end) return '';
+    var start = new Date(loc.closure_start + 'T00:00:00');
+    var end = new Date(loc.closure_end + 'T00:00:00');
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) return '';
+    // Only display banner while the closure is active or upcoming — hide once past.
+    if (today > end) return '';
+    var parts = loc.closure_end.split('-');
+    var endFr = parts.length === 3 ? (parts[2] + '/' + parts[1] + '/' + parts[0]) : loc.closure_end;
+    var isActive = today >= start && today <= end;
+    var title = isActive ? 'Fermeture exceptionnelle' : 'Fermeture à venir';
+    var dateLine = isActive
+      ? 'Jusqu\'au ' + endFr
+      : 'Du ' + (loc.closure_start.split('-').reverse().join('/')) + ' au ' + endFr;
+    var msg = loc.closure_message ? '<p class="addr__closure-msg">' + escapeHtml(loc.closure_message) + '</p>' : '';
+    return '<div class="addr__closure' + (isActive ? ' addr__closure--active' : '') + '" role="note">' +
+      '<span class="addr__closure-title">' + title + '</span>' +
+      '<span class="addr__closure-dates">' + escapeHtml(dateLine) + '</span>' +
+      msg +
+    '</div>';
   }
 
   function renderHours(hoursObj, todayIdx) {

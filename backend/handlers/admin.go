@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -420,20 +421,105 @@ func (h *AdminHandler) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var body struct {
-		Name         string          `json:"name"`
-		Address      string          `json:"address"`
-		Phone        string          `json:"phone"`
-		OpeningHours json.RawMessage `json:"opening_hours"`
-		OrderMethod  string          `json:"order_method"`
-		OrderInfo    string          `json:"order_info"`
+		Name           *string         `json:"name"`
+		Address        *string         `json:"address"`
+		Phone          *string         `json:"phone"`
+		OpeningHours   json.RawMessage `json:"opening_hours"`
+		OrderMethod    *string         `json:"order_method"`
+		OrderInfo      *string         `json:"order_info"`
+		ClosureStart   *string         `json:"closure_start"`   // "YYYY-MM-DD" or "" / null to clear
+		ClosureEnd     *string         `json:"closure_end"`     // "YYYY-MM-DD" or "" / null to clear
+		ClosureMessage *string         `json:"closure_message"` // free-form admin note
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		jsonError(w, "invalid json", http.StatusBadRequest)
 		return
 	}
 
-	h.db.DB.Exec(`UPDATE locations SET name=$1, address=$2, phone=$3, opening_hours=$4, order_method=$5, order_info=$6, updated_at=CURRENT_TIMESTAMP WHERE id=$7`,
-		body.Name, body.Address, body.Phone, body.OpeningHours, body.OrderMethod, body.OrderInfo, id)
+	// Load current values so partial updates don't wipe unrelated fields.
+	var curName, curAddress, curPhone, curOrderMethod, curOrderInfo, curClosureMessage string
+	var curOpening []byte
+	err = h.db.DB.QueryRow(`SELECT name, address, phone, opening_hours, order_method, order_info, closure_message FROM locations WHERE id=$1`, id).
+		Scan(&curName, &curAddress, &curPhone, &curOpening, &curOrderMethod, &curOrderInfo, &curClosureMessage)
+	if err != nil {
+		jsonError(w, "location not found", http.StatusNotFound)
+		return
+	}
+
+	name := curName
+	if body.Name != nil {
+		name = *body.Name
+	}
+	address := curAddress
+	if body.Address != nil {
+		address = *body.Address
+	}
+	phone := curPhone
+	if body.Phone != nil {
+		phone = *body.Phone
+	}
+	opening := curOpening
+	if len(body.OpeningHours) > 0 {
+		opening = body.OpeningHours
+	}
+	orderMethod := curOrderMethod
+	if body.OrderMethod != nil {
+		orderMethod = *body.OrderMethod
+	}
+	orderInfo := curOrderInfo
+	if body.OrderInfo != nil {
+		orderInfo = *body.OrderInfo
+	}
+	closureMessage := curClosureMessage
+	if body.ClosureMessage != nil {
+		closureMessage = *body.ClosureMessage
+	}
+
+	// Closure dates: accept "" or null to clear. Otherwise expect "YYYY-MM-DD".
+	var closureStart, closureEnd interface{}
+	if body.ClosureStart != nil {
+		if *body.ClosureStart == "" {
+			closureStart = nil
+		} else {
+			closureStart = *body.ClosureStart
+		}
+	} else {
+		// keep current value
+		var cur sql.NullTime
+		h.db.DB.QueryRow(`SELECT closure_start FROM locations WHERE id=$1`, id).Scan(&cur)
+		if cur.Valid {
+			closureStart = cur.Time.Format("2006-01-02")
+		} else {
+			closureStart = nil
+		}
+	}
+	if body.ClosureEnd != nil {
+		if *body.ClosureEnd == "" {
+			closureEnd = nil
+		} else {
+			closureEnd = *body.ClosureEnd
+		}
+	} else {
+		var cur sql.NullTime
+		h.db.DB.QueryRow(`SELECT closure_end FROM locations WHERE id=$1`, id).Scan(&cur)
+		if cur.Valid {
+			closureEnd = cur.Time.Format("2006-01-02")
+		} else {
+			closureEnd = nil
+		}
+	}
+
+	_, err = h.db.DB.Exec(`UPDATE locations
+		SET name=$1, address=$2, phone=$3, opening_hours=$4, order_method=$5, order_info=$6,
+		    closure_start=$7, closure_end=$8, closure_message=$9,
+		    updated_at=CURRENT_TIMESTAMP
+		WHERE id=$10`,
+		name, address, phone, opening, orderMethod, orderInfo,
+		closureStart, closureEnd, closureMessage, id)
+	if err != nil {
+		jsonError(w, "database error", http.StatusInternalServerError)
+		return
+	}
 	jsonResponse(w, map[string]string{"status": "updated"})
 }
 
