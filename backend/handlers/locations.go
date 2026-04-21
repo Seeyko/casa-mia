@@ -182,10 +182,10 @@ func parseTime(s string) (int, error) {
 	// Parse "9h", "9h00", "13h30", "18h00", "21h30"
 	var h, m int
 	n, _ := fmt.Sscanf(s, "%dh%d", &h, &m)
-	if n >= 1 {
-		return h*60 + m, nil
+	if n < 1 || h < 0 || h > 23 || m < 0 || m > 59 {
+		return 0, fmt.Errorf("invalid time: %s", s)
 	}
-	return 0, fmt.Errorf("invalid time: %s", s)
+	return h*60 + m, nil
 }
 
 func capitalize(s string) string {

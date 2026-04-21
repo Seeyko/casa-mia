@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -413,6 +414,8 @@ func (h *AdminHandler) DeleteItem(w http.ResponseWriter, r *http.Request) {
 
 // === LOCATIONS ===
 
+const maxClosureMessageLen = 500
+
 func (h *AdminHandler) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -439,8 +442,11 @@ func (h *AdminHandler) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	// Load current values so partial updates don't wipe unrelated fields.
 	var curName, curAddress, curPhone, curOrderMethod, curOrderInfo, curClosureMessage string
 	var curOpening []byte
-	err = h.db.DB.QueryRow(`SELECT name, address, phone, opening_hours, order_method, order_info, closure_message FROM locations WHERE id=$1`, id).
-		Scan(&curName, &curAddress, &curPhone, &curOpening, &curOrderMethod, &curOrderInfo, &curClosureMessage)
+	var curClosureStart, curClosureEnd sql.NullTime
+	err = h.db.DB.QueryRow(`SELECT name, address, phone, opening_hours, order_method, order_info,
+		closure_message, closure_start, closure_end FROM locations WHERE id=$1`, id).
+		Scan(&curName, &curAddress, &curPhone, &curOpening, &curOrderMethod, &curOrderInfo,
+			&curClosureMessage, &curClosureStart, &curClosureEnd)
 	if err != nil {
 		jsonError(w, "location not found", http.StatusNotFound)
 		return
@@ -474,39 +480,22 @@ func (h *AdminHandler) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	if body.ClosureMessage != nil {
 		closureMessage = *body.ClosureMessage
 	}
-
-	// Closure dates: accept "" or null to clear. Otherwise expect "YYYY-MM-DD".
-	var closureStart, closureEnd interface{}
-	if body.ClosureStart != nil {
-		if *body.ClosureStart == "" {
-			closureStart = nil
-		} else {
-			closureStart = *body.ClosureStart
-		}
-	} else {
-		// keep current value
-		var cur sql.NullTime
-		h.db.DB.QueryRow(`SELECT closure_start FROM locations WHERE id=$1`, id).Scan(&cur)
-		if cur.Valid {
-			closureStart = cur.Time.Format("2006-01-02")
-		} else {
-			closureStart = nil
-		}
+	if len(closureMessage) > maxClosureMessageLen {
+		jsonError(w, "closure_message too long (max 500)", http.StatusBadRequest)
+		return
 	}
-	if body.ClosureEnd != nil {
-		if *body.ClosureEnd == "" {
-			closureEnd = nil
-		} else {
-			closureEnd = *body.ClosureEnd
-		}
-	} else {
-		var cur sql.NullTime
-		h.db.DB.QueryRow(`SELECT closure_end FROM locations WHERE id=$1`, id).Scan(&cur)
-		if cur.Valid {
-			closureEnd = cur.Time.Format("2006-01-02")
-		} else {
-			closureEnd = nil
-		}
+
+	// Closure dates: accept "" or null to clear; otherwise expect "YYYY-MM-DD".
+	// When the field is omitted from the payload we keep the stored value.
+	closureStart, err := resolveClosureDate(body.ClosureStart, curClosureStart, "closure_start")
+	if err != nil {
+		jsonError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	closureEnd, err := resolveClosureDate(body.ClosureEnd, curClosureEnd, "closure_end")
+	if err != nil {
+		jsonError(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	_, err = h.db.DB.Exec(`UPDATE locations
@@ -521,6 +510,26 @@ func (h *AdminHandler) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	jsonResponse(w, map[string]string{"status": "updated"})
+}
+
+// resolveClosureDate picks the effective value for a nullable DATE column:
+//   - body pointer nil       -> keep DB value
+//   - body pointer to ""     -> clear (NULL)
+//   - body pointer to "YYYY-MM-DD" -> set (validated)
+func resolveClosureDate(body *string, current sql.NullTime, field string) (interface{}, error) {
+	if body == nil {
+		if current.Valid {
+			return current.Time.Format("2006-01-02"), nil
+		}
+		return nil, nil
+	}
+	if *body == "" {
+		return nil, nil
+	}
+	if _, err := time.Parse("2006-01-02", *body); err != nil {
+		return nil, fmt.Errorf("%s: expected YYYY-MM-DD", field)
+	}
+	return *body, nil
 }
 
 // === Helpers ===

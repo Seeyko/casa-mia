@@ -1187,24 +1187,37 @@ function saveHours(locId) {
     return;
   }
 
-  // Slots vides -> créneau ignoré; jour sans créneau valide -> null
+  // Construit le payload jour par jour. Un jour "ouvert" sans créneau rempli
+  // est une erreur explicite (évite le piège "Ouvrir" silencieusement perdu).
+  var HOUR_RE = /^(?:[01]?\d|2[0-3])h(?:[0-5]\d)?$/;
   var payloadHours = {};
   var slotError = null;
   DAYS.forEach(function(d) {
+    if (slotError) return;
     var dh = s.hours[d.key];
     if (!dh) { payloadHours[d.key] = null; return; }
-    var valid = dh.slots.filter(function(sl) { return sl.open && sl.close; });
-    // Format check
-    valid.forEach(function(sl) {
-      if (!/^\d{1,2}h(\d{2})?$/.test(sl.open) || !/^\d{1,2}h(\d{2})?$/.test(sl.close)) {
-        slotError = d.key;
+    var valid = [];
+    for (var i = 0; i < dh.slots.length; i++) {
+      var sl = dh.slots[i];
+      var hasOpen = !!sl.open, hasClose = !!sl.close;
+      if (!hasOpen && !hasClose) continue; // ligne vierge ignorée
+      if (!hasOpen || !hasClose || !HOUR_RE.test(sl.open) || !HOUR_RE.test(sl.close)) {
+        slotError = { day: d.key, kind: 'format' };
+        return;
       }
-    });
-    payloadHours[d.key] = valid.length ? { slots: valid } : null;
+      valid.push({ open: sl.open, close: sl.close });
+    }
+    if (!valid.length) {
+      slotError = { day: d.key, kind: 'empty' };
+      return;
+    }
+    payloadHours[d.key] = { slots: valid };
   });
   if (slotError) {
     statusEl.className = 'hours-card__status is-err';
-    statusEl.textContent = 'Format d\'heure invalide (ex: 9h, 13h30) pour ' + slotError + '.';
+    statusEl.textContent = slotError.kind === 'empty'
+      ? 'Le jour ' + slotError.day + ' est ouvert mais sans créneau rempli. Remplissez-le ou cliquez sur « Fermer ».'
+      : 'Format d\'heure invalide (ex: 9h, 13h30) pour ' + slotError.day + '.';
     return;
   }
 

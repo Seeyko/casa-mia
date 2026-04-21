@@ -167,11 +167,13 @@
         var container = document.getElementById('locationsGrid');
         if (!container) return;
         var todayIdx = (new Date().getDay() + 6) % 7;
-        var today = new Date(); today.setHours(0, 0, 0, 0);
+        // today-as-ISO string in Europe/Paris — aligne le front sur le même fuseau
+        // que le backend pour éviter un décalage d'1 jour autour de minuit.
+        var todayIso = parisTodayIso();
         container.innerHTML = locations.map(function(loc) {
           return '<div class="addr reveal">' +
             '<h3 class="addr__name">' + escapeHtml(loc.name) + '</h3>' +
-            renderClosureBanner(loc, today) +
+            renderClosureBanner(loc, todayIso) +
             '<p class="addr__street">' + escapeHtml(loc.address) + '</p>' +
             '<a href="tel:' + loc.phone.replace(/\s/g, '') + '" class="addr__phone">' + escapeHtml(loc.phone) + '</a>' +
             renderHours(loc.opening_hours, todayIdx) +
@@ -182,20 +184,37 @@
       .catch(function() {});
   }
 
-  function renderClosureBanner(loc, today) {
+  function parisTodayIso() {
+    try {
+      var parts = new Intl.DateTimeFormat('fr-CA', {
+        timeZone: 'Europe/Paris',
+        year: 'numeric', month: '2-digit', day: '2-digit'
+      }).format(new Date());
+      // fr-CA renvoie "YYYY-MM-DD"
+      if (/^\d{4}-\d{2}-\d{2}$/.test(parts)) return parts;
+    } catch (e) {}
+    var d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  function isoToDdMm(iso) {
+    // "2026-04-30" -> "30/04"
+    var parts = iso.split('-');
+    return parts.length === 3 ? parts[2] + '/' + parts[1] : iso;
+  }
+
+  function renderClosureBanner(loc, todayIso) {
     if (!loc.closure_start || !loc.closure_end) return '';
-    var start = new Date(loc.closure_start + 'T00:00:00');
-    var end = new Date(loc.closure_end + 'T00:00:00');
-    if (isNaN(start.getTime()) || isNaN(end.getTime())) return '';
-    // Only display banner while the closure is active or upcoming — hide once past.
-    if (today > end) return '';
-    var parts = loc.closure_end.split('-');
-    var endFr = parts.length === 3 ? (parts[2] + '/' + parts[1] + '/' + parts[0]) : loc.closure_end;
-    var isActive = today >= start && today <= end;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(loc.closure_start) || !/^\d{4}-\d{2}-\d{2}$/.test(loc.closure_end)) return '';
+    // Comparaison lexicographique sûre sur YYYY-MM-DD.
+    if (todayIso > loc.closure_end) return '';
+    var isActive = todayIso >= loc.closure_start && todayIso <= loc.closure_end;
+    var endFr = isoToDdMm(loc.closure_end);
+    var startFr = isoToDdMm(loc.closure_start);
     var title = isActive ? 'Fermeture exceptionnelle' : 'Fermeture à venir';
-    var dateLine = isActive
-      ? 'Jusqu\'au ' + endFr
-      : 'Du ' + (loc.closure_start.split('-').reverse().join('/')) + ' au ' + endFr;
+    var dateLine = isActive ? 'Jusqu\'au ' + endFr : 'Du ' + startFr + ' au ' + endFr;
     var msg = loc.closure_message ? '<p class="addr__closure-msg">' + escapeHtml(loc.closure_message) + '</p>' : '';
     return '<div class="addr__closure' + (isActive ? ' addr__closure--active' : '') + '" role="note">' +
       '<span class="addr__closure-title">' + title + '</span>' +
