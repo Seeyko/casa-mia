@@ -155,8 +155,23 @@
           return '<article class="news__item">' + img + body + '</article>';
         }).join('');
         initFadeIn();
+        // Révéler la section Actualités décale les ancres en dessous : on
+        // recale le scroll sur l'ancre de l'URL si la page vient d'arriver
+        // depuis un autre lien (ex. /#nos-adresses depuis /histoire).
+        realignToHash();
       })
       .catch(function() {});
+  }
+
+  function realignToHash() {
+    var hash = window.location.hash;
+    if (!hash || hash === '#') return;
+    var target;
+    try { target = document.querySelector(hash); } catch (e) { return; }
+    if (!target) return;
+    requestAnimationFrame(function() {
+      target.scrollIntoView();
+    });
   }
 
   // ===== LOCATIONS =====
@@ -180,6 +195,7 @@
             '</div>';
         }).join('');
         initFadeIn();
+        realignToHash();
       })
       .catch(function() {});
   }
