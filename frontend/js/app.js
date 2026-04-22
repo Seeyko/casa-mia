@@ -159,11 +159,25 @@
         // recale le scroll sur l'ancre de l'URL si la page vient d'arriver
         // depuis un autre lien (ex. /#nos-adresses depuis /histoire).
         realignToHash();
+        // Les images des news arrivent en différé et font encore bouger la
+        // hauteur de la section : on recale à chaque image chargée tant que
+        // l'utilisateur n'a pas encore scrollé manuellement.
+        container.querySelectorAll('img').forEach(function(img) {
+          if (img.complete) return;
+          img.addEventListener('load', realignToHash, { once: true });
+          img.addEventListener('error', realignToHash, { once: true });
+        });
       })
       .catch(function() {});
   }
 
+  var userHasInteracted = false;
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function(evt) {
+    window.addEventListener(evt, function() { userHasInteracted = true; }, { once: true, passive: true });
+  });
+
   function realignToHash() {
+    if (userHasInteracted) return;
     var hash = window.location.hash;
     if (!hash || hash === '#') return;
     var target;
